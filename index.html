@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1D7A52">
+<title>AmwDigital</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  color-scheme:light;
+  --g:#1D7A52;--gl:#E8F5EF;--gd:#0F5438;
+  --t:#111;--ts:#666;--th:#bbb;
+  --bg:#F2F2F7;--card:#fff;--border:rgba(0,0,0,0.09);
+  --shadow:0 2px 12px rgba(0,0,0,.07);
+  --nav:70px;--safe:env(safe-area-inset-bottom,0px);
+  --r:14px;--rs:10px;
+}
+html,body{height:100%;overflow:hidden;background:#F2F2F7!important}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F2F2F7!important;color:#111!important;display:flex;flex-direction:column}
+
+/* NAV */
+#nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav) + var(--safe));background:var(--card)!important;border-top:.5px solid var(--border);display:flex;align-items:flex-start;padding-top:8px;z-index:90}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;background:none;border:none;cursor:pointer;color:var(--ts);font-size:12px;font-family:inherit;position:relative;transition:color .15s}
+.nb.on{color:var(--g)}
+.nb svg{width:26px;height:26px;stroke-width:1.8;fill:none;stroke:currentColor}
+#cart-badge{display:none;position:absolute;top:0;right:calc(50% - 22px);background:#E24B4A;color:#fff;border-radius:10px;font-size:10px;padding:1px 5px;min-width:18px;text-align:center;font-weight:700}
+
+/* APP */
+#app{flex:1;overflow:hidden;position:relative;padding-bottom:calc(var(--nav) + var(--safe))}
+.view{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:none;padding-bottom:16px}
+.view.on{display:block}
+
+/* PAGE HEADER */
+.vh{padding:14px 16px 10px;background:var(--card)!important;border-bottom:.5px solid var(--border);position:sticky;top:0;z-index:40}
+.vh h1{font-size:22px;font-weight:700;line-height:1}
+.vh-row{display:flex;justify-content:space-between;align-items:center}
+
+/* SEARCH */
+.srch{display:flex;align-items:center;gap:8px;background:var(--bg);border-radius:10px;padding:0 10px;margin-top:10px}
+.srch svg{opacity:.35;flex-shrink:0;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}
+.srch input{flex:1;border:none;background:none;padding:11px 0;font-size:16px;color:var(--t);outline:none;font-family:inherit}
+.srch input::placeholder{color:var(--ts)}
+
+/* PILLS */
+.pills{display:flex;gap:7px;overflow-x:auto;padding:10px 14px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.pills::-webkit-scrollbar{display:none}
+.pill{flex-shrink:0;padding:7px 16px;border-radius:20px;font-size:14px;border:.5px solid var(--border);background:var(--card);color:var(--ts);cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+.pill.on{background:var(--g);color:#fff;border-color:var(--g)}
+
+/* PRODUCT GRID */
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 12px}
+.pc{background:var(--card);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);cursor:pointer;transition:transform .12s}
+.pc:active{transform:scale(.97)}
+.pc-img-wrap{background:#f5f5f5;height:130px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pc-img{width:100%;height:100%;object-fit:contain;padding:8px}
+.pc-placeholder{font-size:38px}
+.pc-body{padding:10px 11px 11px;flex:1;display:flex;flex-direction:column;gap:3px}
+.pc-name{font-size:14px;font-weight:500;line-height:1.35;flex:1}
+.pc-pub{font-size:17px;color:var(--g);font-weight:700;margin-top:4px}
+.pc-foot{display:flex;justify-content:space-between;align-items:center;margin-top:7px}
+.pc-pts{font-size:11px;color:var(--g);background:var(--gl);padding:3px 8px;border-radius:6px;font-weight:500}
+.pc-add{width:36px;height:36px;border-radius:10px;border:none;background:var(--g);color:#fff;cursor:pointer;font-size:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* PRODUCT DETAIL */
+#pdoverlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;display:none;align-items:flex-end;backdrop-filter:blur(6px)}
+#pdoverlay.on{display:flex}
+#pdbox{background:var(--card);border-radius:22px 22px 0 0;width:100%;max-height:92vh;overflow-y:auto;padding-bottom:calc(20px + var(--safe));position:relative}
+.pd-img-wrap{background:#f5f5f5;width:100%;aspect-ratio:1.4;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pd-img{width:100%;height:100%;object-fit:contain;padding:20px}
+.pd-placeholder{font-size:80px}
+.pd-info{padding:16px 18px}
+.pd-sub{font-size:12px;color:var(--ts);font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.pd-name{font-size:19px;font-weight:700;line-height:1.25;margin-bottom:10px}
+.pd-desc{font-size:14px;color:var(--ts);line-height:1.55;margin-bottom:14px}
+.pd-prices{background:var(--bg);border-radius:var(--rs);padding:12px 14px;margin-bottom:14px}
+.pd-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0}
+.pd-plabel{font-size:13px;color:var(--ts)}
+.pd-pval{font-size:18px;font-weight:700;color:var(--g)}
+.pd-pts{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--g);background:var(--gl);padding:4px 10px;border-radius:20px;margin-bottom:16px}
+.pd-btns{display:flex;gap:10px}
+.pd-btn-share{flex:1;background:var(--bg);border:.5px solid var(--border);color:var(--t);border-radius:var(--rs);padding:13px;font-size:15px;cursor:pointer;font-family:inherit;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px}
+.pd-btn-add{flex:2;background:var(--g);color:#fff;border:none;border-radius:var(--rs);padding:13px;font-size:15px;cursor:pointer;font-family:inherit;font-weight:500}
+.pd-close{position:absolute;top:14px;right:16px;width:30px;height:30px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--ts)}
+
+/* CART */
+.ci{background:var(--card);margin:0 12px 8px;border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow)}
+.cin{flex:1;min-width:0}
+.cin-name{font-size:14px;font-weight:500;line-height:1.3}
+.cin-price{font-size:13px;color:var(--ts);margin-top:3px}
+.qc{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.qb{width:30px;height:30px;border-radius:9px;border:.5px solid var(--border);background:var(--bg);color:var(--t);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;font-family:inherit}
+.qn{min-width:24px;text-align:center;font-size:15px;font-weight:600}
+.qd{width:30px;height:30px;border-radius:9px;border:none;background:none;color:#E24B4A;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.qd svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}
+
+/* EMPTY */
+.empty{text-align:center;padding:70px 24px;color:var(--ts)}
+.empty svg{opacity:.2;margin-bottom:12px}
+.empty p{font-size:15px}
+
+/* CART FOOTER (fixed) */
+#cart-footer{
+  position:fixed;bottom:calc(var(--nav) + var(--safe));left:0;right:0;
+  background:var(--card)!important;border-top:.5px solid var(--border);
+  padding:12px 16px;z-index:85;display:none;
+  box-shadow:0 -4px 16px rgba(0,0,0,.08)
+}
+#cart-footer.on{display:block}
+.cf-totals{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.cf-label{font-size:12px;color:var(--ts)}
+.cf-amount{font-size:24px;font-weight:700;color:var(--g)}
+.cf-note{font-size:11px;color:var(--ts)}
+.cf-pts{font-size:12px;color:var(--g);background:var(--gl);padding:3px 9px;border-radius:8px;font-weight:600}
+#send-btn{
+  width:100%;background:var(--g);color:#fff;border:none;border-radius:var(--rs);
+  padding:15px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;gap:8px
+}
+#send-btn:active{opacity:.88}
+#scroll-cart{padding-bottom:160px}
+
+/* MODAL */
+#moverlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:none;align-items:flex-end;backdrop-filter:blur(5px)}
+#moverlay.on{display:flex}
+#mbox{background:var(--card);border-radius:22px 22px 0 0;width:100%;max-height:92vh;overflow-y:auto;padding:24px 18px calc(28px + var(--safe))}
+.mtitle{font-size:20px;font-weight:700;margin-bottom:4px}
+.mstep{font-size:13px;color:var(--ts);margin-bottom:18px}
+.flabel{font-size:13px;color:var(--ts);margin-bottom:5px;display:block;font-weight:500}
+.finput{width:100%;border:.5px solid var(--border);border-radius:var(--rs);padding:12px 14px;font-size:16px;background:var(--bg);color:var(--t);font-family:inherit;outline:none;margin-bottom:14px;transition:border-color .15s}
+.finput:focus{border-color:var(--g)}
+.btnp{width:100%;background:var(--g);color:#fff;border:none;border-radius:var(--rs);padding:15px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px}
+.btns{width:100%;background:var(--bg);color:var(--t);border:.5px solid var(--border);border-radius:var(--rs);padding:13px;font-size:15px;cursor:pointer;font-family:inherit;margin-top:8px}
+.btnp:active,.btns:active{opacity:.85}
+.link-btn{background:none;border:none;color:var(--g);cursor:pointer;font-size:14px;font-weight:500;font-family:inherit;padding:4px}
+
+/* SETUP SCREEN */
+#setup-screen{position:fixed;inset:0;background:#F2F2F7;z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center}
+#setup-screen h2{font-size:26px;font-weight:800;color:var(--g);margin-bottom:8px}
+#setup-screen p{font-size:14px;color:var(--ts);line-height:1.6;margin-bottom:24px}
+.setup-box{background:var(--card);border-radius:var(--r);padding:20px;width:100%;max-width:400px;text-align:left;box-shadow:var(--shadow)}
+.setup-url{background:var(--bg);border-radius:var(--rs);padding:12px;font-size:12px;word-break:break-all;color:var(--ts);margin:12px 0;font-family:monospace;line-height:1.5}
+.copy-btn{width:100%;background:var(--g);color:#fff;border:none;border-radius:var(--rs);padding:13px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:4px}
+
+/* TOAST */
+#toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:rgba(20,20,20,.92);color:#fff;padding:9px 20px;border-radius:20px;font-size:14px;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap}
+#toast.on{opacity:1}
+</style>
+</head>
+<body>
+
+<div id="setup-screen" style="display:none">
+  <button id="setup-close-btn" onclick="hideSetup()" style="display:none;position:absolute;top:18px;right:18px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--ts)">✕</button>
+  <div style="font-size:52px;margin-bottom:12px">🌿</div>
+  <h2>Configurar mi tienda</h2>
+  <p>Para que los clientes puedan enviarte pedidos,<br>completá tu número de WhatsApp y el nombre de tu tienda.</p>
+  <div class="setup-box">
+    <label class="flabel">Tu número de WhatsApp (con código de país)</label>
+    <input class="finput" id="s-tel" placeholder="ej. 5491112345678" type="tel">
+    <label class="flabel">Nombre de tu tienda</label>
+    <input class="finput" id="s-nom" placeholder="ej. AmwDigital con María" value="Mi Tienda AmwDigital">
+    <button class="btnp" onclick="generateUrl()">Generar mi link de tienda</button>
+    <div id="url-box" style="display:none">
+      <div class="setup-url" id="url-text"></div>
+      <button class="copy-btn" onclick="copyUrl()">📋 Copiar y compartir</button>
+      <div style="font-size:11px;color:var(--ts);margin-top:8px;text-align:center">Compartí este link con tus clientes por WhatsApp</div>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+  <!-- CATÁLOGO -->
+  <div id="v-catalogo" class="view on">
+    <div class="vh">
+      <div class="vh-row">
+        <h1 id="shop-title">🌿 AmwDigital</h1>
+        <div style="display:flex;align-items:center;gap:6px">
+          <button class="link-btn" onclick="showSetup()" title="Configurar tienda" style="font-size:20px;padding:4px 6px;color:var(--ts)">⚙️</button>
+          <button class="link-btn" onclick="goTo('carrito')" style="position:relative;font-size:22px;padding:4px 8px">
+            🛒<span id="cart-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#E24B4A;color:#fff;border-radius:10px;font-size:10px;padding:1px 5px;font-weight:700;min-width:18px;text-align:center">0</span>
+          </button>
+        </div>
+      </div>
+      <div class="srch">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Buscar producto o código..." id="srch-input" oninput="renderProducts()">
+      </div>
+    </div>
+    <div class="pills" id="cat-pills"></div>
+    <div class="pgrid" id="prod-list"></div>
+    <div style="height:8px"></div>
+  </div>
+
+  <!-- CARRITO -->
+  <div id="v-carrito" class="view">
+    <div class="vh">
+      <div class="vh-row">
+        <h1>Mi Carrito</h1>
+        <button class="link-btn" onclick="clearCart()" style="color:#E24B4A">Vaciar</button>
+      </div>
+    </div>
+    <div id="scroll-cart">
+      <div id="cart-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CART FOOTER -->
+<div id="cart-footer">
+  <div class="cf-totals">
+    <div>
+      <div class="cf-label">Total estimado</div>
+      <div class="cf-amount" id="cf-amount">$0</div>
+    </div>
+  </div>
+  <button id="send-btn" onclick="sendOrder()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+    Enviar pedido por WhatsApp
+  </button>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <button class="nb on" id="nb-catalogo" onclick="goTo('catalogo')">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    Catálogo
+  </button>
+  <button class="nb" id="nb-carrito" onclick="goTo('carrito')" style="position:relative">
+    <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    <span id="cart-badge-nav" style="display:none;position:absolute;top:2px;right:calc(50% - 22px);background:#E24B4A;color:#fff;border-radius:10px;font-size:10px;padding:1px 5px;min-width:18px;text-align:center;font-weight:700">0</span>
+    Carrito
+  </button>
+</nav>
+
+<!-- PRODUCT DETAIL -->
+<div id="pdoverlay" onclick="closePD(event)">
+  <div id="pdbox"></div>
+</div>
+
+<!-- MODAL -->
+<div id="moverlay" onclick="closeModal(event)">
+  <div id="mbox"></div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// ═══════════════════════════════════════════
+// CONFIG (from URL hash: ?tel=549...&nombre=Mi+Tienda)
+// ═══════════════════════════════════════════
+function getHashConfig(){
+  const h=(location.hash||'').replace('#','');
+  if(!h) return null;
+  const p=new URLSearchParams(h);
+  const tel=p.get('tel')||'';
+  const nombre=p.get('nombre')||'Mi Tienda AmwDigital';
+  return tel?{tel,nombre}:null;
+}
+const CFG=getHashConfig();
+
+// ═══════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════
+const CAT_ICON={'Nutrición':'🌿','Belleza':'✨','Cuidado Personal':'🧴','Hogar':'🏠'};
+const catIcon=cat=>CAT_ICON[cat]||'📦';
+const fmt=n=>'$'+Math.round(n).toLocaleString('es-AR');
+const imgUrl=cod=>`https://www.amway.com.ar/img_pict/380_Catalog/Products/large/380_${cod}.jpg`;
+
+const PRODS=[
+  {id:'120843',n:'Double X Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'120843',pub:117474,pts:29.24,desc:'Multivitamínico, multimineral y fitoquímico avanzado. 12 vitaminas, 10 minerales y concentrado de 22 plantas.'},
+  {id:'110178',n:'B Plus Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'110178',pub:24421,pts:6.08,desc:'Complejo de 8 vitaminas del grupo B para el metabolismo energético y la función del sistema nervioso.'},
+  {id:'109741',n:'C Plus Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'109741',pub:24931,pts:6.21,desc:'Vitamina C con bioflavonoides de acerola para un sistema inmunológico fuerte y protección antioxidante.'},
+  {id:'102736',n:'Fibra en Polvo Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'102736',pub:51997,pts:12.94,desc:'Fibra dietaria soluble e insoluble de origen vegetal para la digestión y el tránsito intestinal saludable.'},
+  {id:'100054',n:'CLA 500 Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'100054',pub:61079,pts:15.20,desc:'Ácido Linoleico Conjugado de aceite de cártamo natural con certificación orgánica.'},
+  {id:'110415',n:'Proteína Vegetal Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'110415',pub:60789,pts:15.13,desc:'Proteína de alta calidad de origen vegetal (soya, trigo y amaranto). Ideal para recuperación muscular.'},
+  {id:'110609',n:'Cal Mag D Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'110609',pub:26779,pts:6.67,desc:'Calcio, magnesio y vitamina D para huesos fuertes y función muscular óptima.'},
+  {id:'106678',n:'HSN Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'106678',pub:26683,pts:6.64,desc:'Biotina, zinc y selenio para el cuidado del cabello, la piel y las uñas.'},
+  {id:'109536',n:'Multicaroteno Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'109536',pub:40337,pts:10.04,desc:'Complejo de carotenoides naturales con beta-caroteno, licopeno y luteína.'},
+  {id:'126130',n:'Triple Omega-3 Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'126130',pub:64749,pts:16.12,desc:'Ácidos grasos omega 3, 6 y 9 de alta pureza. Apoya la salud cardiovascular y la función cerebral.'},
+  {id:'120571',n:'Probiotic Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'120571',pub:77185,pts:19.21,desc:'2 mil millones de microorganismos beneficiosos para el equilibrio de la flora intestinal.'},
+  {id:'123043',n:'Kids Daily Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'123043',pub:28967,pts:7.21,desc:'Vitaminas y minerales esenciales en formato masticable para el crecimiento sano de niños.'},
+  {id:'126009',n:'Daily Plus Nutrilite™ 45 Tab.',cat:'Nutrición',sub:'Nutrilite',cod:'126009',pub:28967,pts:7.21,desc:'22 vitaminas y minerales esenciales con exclusivo jugo de acerola. Una tableta al día.'},
+  {id:'126010',n:'Daily Plus Nutrilite™ 90 Tab.',cat:'Nutrición',sub:'Nutrilite',cod:'126010',pub:56400,pts:14.04,desc:'Presentación de 90 tabletas. 22 vitaminas y minerales para 3 meses de bienestar.'},
+  {id:'102046',n:'Tri Iron Folic Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'102046',pub:29492,pts:7.34,desc:'Hierro + ácido fólico + vitamina C para máxima absorción. Apoya la salud femenina.'},
+  {id:'315249',n:'Nutrilite™ Collagen + C',cat:'Nutrición',sub:'Nutrilite',cod:'315249',pub:75000,pts:18.67,desc:'Colágeno hidrolizado tipo I, II y III con vitamina C para piel, articulaciones y tejidos.'},
+  {id:'118891',n:'Phytopowder™ Naranja',cat:'Nutrición',sub:'Nutrilite',cod:'118891',pub:63089,pts:15.70,desc:'Bebida en polvo con fitoquímicos de frutas y vegetales. Sabor naranja refrescante.'},
+  {id:'118893',n:'Phytopowder™ Cereza',cat:'Nutrición',sub:'Nutrilite',cod:'118893',pub:63089,pts:15.70,desc:'Bebida en polvo con fitoquímicos de frutas y vegetales. Sabor cereza.'},
+  {id:'127004',n:'XS Cranberry Grape (12 u.)',cat:'Nutrición',sub:'XS',cod:'127004',pub:42356,pts:5.27,desc:'Pack 12 bebidas energizantes sin azúcar con vitaminas del grupo B. Sabor cranberry y uva.'},
+  {id:'126740',n:'Máscara + Sérum Pestañas',cat:'Belleza',sub:'Artistry',cod:'126740',pub:48280,pts:11.42,desc:'Dúo intensificador de pestañas resistente al agua. El sérum nutre y fortalece.'},
+  {id:'126744',n:'Delineador de Ojos Waterproof',cat:'Belleza',sub:'Artistry',cod:'126744',pub:40363,pts:9.54,desc:'Delineador de larga duración resistente al agua y al sudor.'},
+  {id:'126747',n:'Brow Pencil & Gel de Cejas',cat:'Belleza',sub:'Artistry',cod:'126747',pub:40363,pts:9.54,desc:'Define y da forma a las cejas con el lápiz y fijalas con el gel.'},
+  {id:'124144',n:'Lipstick Crema Saturday Peach',cat:'Belleza',sub:'Artistry',cod:'124144',pub:34026,pts:8.05,desc:'Labial cremoso de larga duración con acabado satinado e hidratación de aceite de argán.'},
+  {id:'124149',n:'Lipstick Crema Secret Crush Scarlet',cat:'Belleza',sub:'Artistry',cod:'124149',pub:34026,pts:8.05,desc:'Labial cremoso en rojo intenso con acabado satinado. Color que dura todo el día.'},
+  {id:'124155',n:'Lipstick Matte Lunch Date Pink',cat:'Belleza',sub:'Artistry',cod:'124155',pub:34026,pts:8.05,desc:'Labial mate con textura suave. Sin sensación de resequedad. Pigmentación intensa.'},
+  {id:'124823',n:'Multi-Defense UV 50 Protect',cat:'Belleza',sub:'Artistry',cod:'124823',pub:72497,pts:17.14,desc:'Protector solar facial SPF 50+ con hidratación y antioxidantes.'},
+  {id:'125517',n:'Sérum Vitamina C + HA3',cat:'Belleza',sub:'Artistry',cod:'125517',pub:67319,pts:15.92,desc:'Triple ácido hialurónico + vitamina C para piel radiante, hidratada y luminosa.'},
+  {id:'125575',n:'Mascarilla para Dormir',cat:'Belleza',sub:'Artistry',cod:'125575',pub:84351,pts:19.95,desc:'Tratamiento nocturno con poli-glucurónicos y péptidos. Hidrata y revitaliza la piel.'},
+  {id:'123798',n:'Crema Hidratante Skin Nutrition',cat:'Belleza',sub:'Artistry',cod:'123798',pub:90123,pts:21.31,desc:'Nutrición profunda con 9 ingredientes botánicos activos.'},
+  {id:'123785',n:'Crema Reactivación Renovadora',cat:'Belleza',sub:'Artistry',cod:'123785',pub:111356,pts:26.33,desc:'Crema anti-edad. Reduce líneas de expresión y mejora la firmeza.'},
+  {id:'123791',n:'Agua Micelar Desmaquillante',cat:'Belleza',sub:'Artistry',cod:'123791',pub:55056,pts:13.02,desc:'Limpieza suave 3 en 1. Elimina el maquillaje, limpia e hidrata sin resecar.'},
+  {id:'125902',n:'Crema para Manos G&H',cat:'Cuidado Personal',sub:'G&H',cod:'125902',pub:16766,pts:3.96,desc:'Crema nutritiva de rápida absorción con extractos de girasol y semilla de algodón.'},
+  {id:'125893',n:'Loción Corporal G&H',cat:'Cuidado Personal',sub:'G&H',cod:'125893',pub:36542,pts:8.64,desc:'Hidratación profunda con manteca de karité y vitamina E.'},
+  {id:'125894',n:'Jabón Líquido Manos G&H',cat:'Cuidado Personal',sub:'G&H',cod:'125894',pub:21742,pts:5.14,desc:'Limpieza suave con agentes hidratantes naturales. Fragancia suave y agradable.'},
+  {id:'125892',n:'Gel de Baño Exfoliante G&H',cat:'Cuidado Personal',sub:'G&H',cod:'125892',pub:31204,pts:7.38,desc:'Exfoliante corporal que elimina células muertas y suaviza la piel.'},
+  {id:'125913',n:'Barra de Jabón Nutritiva G&H',cat:'Cuidado Personal',sub:'G&H',cod:'125913',pub:18068,pts:4.27,desc:'Jabón en barra con extractos botánicos nutritivos. Limpia suavemente.'},
+  {id:'125896',n:'Desodorante Roll-On G&H',cat:'Cuidado Personal',sub:'G&H',cod:'125896',pub:9690,pts:2.29,desc:'Antitranspirante eficaz con protección de 24 horas. Suave para piel sensible.'},
+  {id:'305275',n:'Protector Solar G&H SPF 30',cat:'Cuidado Personal',sub:'G&H',cod:'305275',pub:48449,pts:12.06,desc:'Protector solar corporal SPF 30+ resistente al agua. Para toda la familia.'},
+  {id:'126308',n:'G&H Baby Gel de Baño y Shampoo',cat:'Cuidado Personal',sub:'G&H Baby',cod:'126308',pub:21705,pts:5.13,desc:'Fórmula suave 2 en 1 sin lágrimas. Dermatológicamente probado para bebés.'},
+  {id:'254101',n:'Crema para Manos Ertia',cat:'Cuidado Personal',sub:'Ertia',cod:'254101',pub:17490,pts:4.35,desc:'Crema hidratante con extractos naturales. Absorción rápida y no grasosa.'},
+  {id:'254102',n:'Crema para Pies Ertia',cat:'Cuidado Personal',sub:'Ertia',cod:'254102',pub:23723,pts:5.90,desc:'Tratamiento intensivo para pies cansados y resecos. Hidratación profunda.'},
+  {id:'124106',n:'Pasta Dental Glister 200g',cat:'Cuidado Personal',sub:'Glister',cod:'124106',pub:12057,pts:2.85,desc:'Multiacción con fluoruro. Blanquea, fortalece el esmalte y previene la caries.'},
+  {id:'124107',n:'Pasta Dental Glister 50g',cat:'Cuidado Personal',sub:'Glister',cod:'124107',pub:4737,pts:1.12,desc:'Pasta dental Glister Multiacción en presentación compacta de viaje.'},
+  {id:'124108',n:'Enjuague Bucal Glister',cat:'Cuidado Personal',sub:'Glister',cod:'124108',pub:23590,pts:5.58,desc:'Antibacterial que elimina el 99.9% de bacterias. Frescura prolongada sin alcohol.'},
+  {id:'124109',n:'Cepillo Dental Glister',cat:'Cuidado Personal',sub:'Glister',cod:'124109',pub:24197,pts:5.72,desc:'Cerdas de microfibra para limpieza profunda y suave. Mango ergonómico.'},
+  {id:'342021',n:'Pack 12× Pasta Dental 200g',cat:'Cuidado Personal',sub:'Glister',cod:'342021',pub:132627,pts:31.36,desc:'Pack económico de 12 tubos Glister Multiacción 200g. Ideal para stock familiar.'},
+  {id:'126449',n:'Shampoo Hidratación Satinique',cat:'Cuidado Personal',sub:'Satinique',cod:'126449',pub:22306,pts:5.27,desc:'Tecnología amino-gel que hidrata y suaviza el cabello desde la primera lavada.'},
+  {id:'126451',n:'Acondicionador Hidratación Satinique',cat:'Cuidado Personal',sub:'Satinique',cod:'126451',pub:22306,pts:5.27,desc:'Desenreda y suaviza con tecnología amino-gel. Brillo y manejabilidad desde el primer uso.'},
+  {id:'126452',n:'Shampoo Reparador Satinique',cat:'Cuidado Personal',sub:'Satinique',cod:'126452',pub:22306,pts:5.27,desc:'Tratamiento para cabello dañado. Restaura la fibra capilar y devuelve el brillo.'},
+  {id:'126457',n:'Shampoo Anticaída Satinique',cat:'Cuidado Personal',sub:'Satinique',cod:'126457',pub:22306,pts:5.27,desc:'Con cafeína y biotina para fortalecer el cabello y reducir la caída.'},
+  {id:'126465',n:'Tratamiento Reparador Satinique',cat:'Cuidado Personal',sub:'Satinique',cod:'126465',pub:37200,pts:8.80,desc:'Mascarilla intensiva para cabello dañado. Reconstruye y fortalece desde adentro.'},
+  {id:'110488',n:'Dish Drops Lavaplatos',cat:'Hogar',sub:'Amway Home',cod:'110488',pub:33317,pts:3.94,desc:'Lavavajillas biodegradable ultra concentrado. Eficaz en grasa y seguro para manos.'},
+  {id:'110403',n:'SA8 Aerosol Quitamanchas',cat:'Hogar',sub:'Amway Home',cod:'110403',pub:30703,pts:3.63,desc:'Eliminador de manchas en aerosol. Actúa en segundos sin dañar las fibras.'},
+  {id:'124485',n:'SA8 Blanqueador Telas 1 Kg',cat:'Hogar',sub:'Amway Home',cod:'124485',pub:35299,pts:4.17,desc:'Blanqueador sin cloro seguro para colores y blancos. Ecológico y efectivo.'},
+  {id:'109849',n:'SA8 Detergente en Polvo 3 Kg',cat:'Hogar',sub:'Amway Home',cod:'109849',pub:71956,pts:8.51,desc:'Ultra concentrado para hasta 90 lavados. Máxima limpieza en agua fría o caliente.'},
+  {id:'112532',n:'SA8 Detergente Líquido 1 L',cat:'Hogar',sub:'Amway Home',cod:'112532',pub:46651,pts:5.52,desc:'Biodegradable. Alta eficacia en ropa oscura y delicada.'},
+  {id:'110480',n:'SA8 Suavizante Concentrado 1 L',cat:'Hogar',sub:'Amway Home',cod:'110480',pub:31320,pts:3.70,desc:'Suavizante concentrado de larga fragancia. Reduce la electricidad estática.'},
+];
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let cart=JSON.parse(localStorage.getItem('client_cart')||'[]');
+let activeCat='Todos';
+const getP=id=>PRODS.find(p=>p.id===id);
+
+// ═══════════════════════════════════════════
+// SETUP
+// ═══════════════════════════════════════════
+// Always init the catalog
+initCats();
+renderProducts();
+updateBadge();
+updateFooter();
+
+if(!CFG){
+  document.getElementById('setup-screen').style.display='flex';
+}else{
+  document.getElementById('shop-title').textContent='🌿 '+CFG.nombre;
+  document.title=CFG.nombre;
+}
+
+function showSetup(){
+  const ss=document.getElementById('setup-screen');
+  ss.style.display='flex';
+  // Show close button only if app is already configured (CFG exists)
+  document.getElementById('setup-close-btn').style.display=CFG?'block':'none';
+}
+function hideSetup(){
+  document.getElementById('setup-screen').style.display='none';
+}
+
+function generateUrl(){
+  const tel=document.getElementById('s-tel').value.trim().replace(/\D/g,'');
+  const nom=document.getElementById('s-nom').value.trim()||'Mi Tienda AmwDigital';
+  if(!tel){toast('Ingresá tu número de WhatsApp');return;}
+  const url=`${location.origin}${location.pathname}#tel=${tel}&nombre=${encodeURIComponent(nom)}`;
+  document.getElementById('url-text').textContent=url;
+  document.getElementById('url-box').style.display='block';
+  document.getElementById('url-text').dataset.url=url;
+}
+function copyUrl(){
+  const url=document.getElementById('url-text').dataset.url;
+  if(navigator.share){
+    navigator.share({title:'Mi Tienda AmwDigital',url}).catch(()=>{});
+  }else{
+    navigator.clipboard.writeText(url).then(()=>toast('Link copiado ✓')).catch(()=>{});
+  }
+}
+
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+function goTo(view){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('v-'+view).classList.add('on');
+  document.getElementById('nb-'+view).classList.add('on');
+  if(view==='carrito'){renderCart();updateFooter();}
+}
+
+// ═══════════════════════════════════════════
+// CATALOG
+// ═══════════════════════════════════════════
+function initCats(){
+  const cats=['Todos',...new Set(PRODS.map(p=>p.cat))];
+  document.getElementById('cat-pills').innerHTML=cats.map(c=>
+    `<button class="pill${c===activeCat?' on':''}" onclick="setCat('${c}')">${c}</button>`
+  ).join('');
+}
+function setCat(cat){
+  activeCat=cat;
+  document.querySelectorAll('#cat-pills .pill').forEach((b,i)=>{
+    const cats=['Todos',...new Set(PRODS.map(p=>p.cat))];
+    b.classList.toggle('on',cats[i]===cat);
+  });
+  renderProducts();
+}
+function renderProducts(){
+  const q=document.getElementById('srch-input').value.toLowerCase();
+  const list=PRODS.filter(p=>{
+    const mc=activeCat==='Todos'||p.cat===activeCat;
+    const ms=!q||p.n.toLowerCase().includes(q)||p.cod.toLowerCase().includes(q);
+    return mc&&ms;
+  });
+  const el=document.getElementById('prod-list');
+  if(!list.length){el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:50px 16px;color:var(--ts);font-size:14px">Sin resultados</div>';return;}
+  el.innerHTML=list.map(p=>`
+    <div class="pc" onclick="showProduct('${p.id}')">
+      <div class="pc-img-wrap">
+        <img class="pc-img" src="${imgUrl(p.cod)}"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+          loading="lazy" alt="${p.n}">
+        <div class="pc-placeholder" style="display:none">${catIcon(p.cat)}</div>
+      </div>
+      <div class="pc-body">
+        <div class="pc-name">${p.n}</div>
+        <div class="pc-pub">${fmt(p.pub)}</div>
+        <div class="pc-foot">
+          <span style="font-size:11px;color:var(--ts)">Cód. ${p.cod}</span>
+          <button class="pc-add" onclick="event.stopPropagation();addCart('${p.id}')">+</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════
+// PRODUCT DETAIL
+// ═══════════════════════════════════════════
+function showProduct(id){
+  const p=getP(id);if(!p)return;
+  const icon=catIcon(p.cat);
+  document.getElementById('pdbox').innerHTML=`
+    <button class="pd-close" onclick="closePD()">✕</button>
+    <div class="pd-img-wrap">
+      <img class="pd-img" src="${imgUrl(p.cod)}"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${p.n}">
+      <div class="pd-placeholder" style="display:none">${icon}</div>
+    </div>
+    <div class="pd-info">
+      <div class="pd-sub">${p.sub||p.cat}</div>
+      <div class="pd-name">${p.n}</div>
+      ${p.desc?`<div class="pd-desc">${p.desc}</div>`:''}
+      <div class="pd-pts">Cód. ${p.cod}</div>
+      <div class="pd-prices">
+        <div class="pd-row">
+          <span class="pd-plabel">Precio al público</span>
+          <span class="pd-pval">${fmt(p.pub)}</span>
+        </div>
+      </div>
+      <div class="pd-btns">
+        <button class="pd-btn-share" onclick="shareProduct('${id}')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.59 13.51 6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+          Compartir
+        </button>
+        <button class="pd-btn-add" onclick="addCart('${id}');closePD()">Agregar al carrito</button>
+      </div>
+    </div>`;
+  document.getElementById('pdoverlay').classList.add('on');
+}
+function closePD(e){
+  if(!e||e.target===document.getElementById('pdoverlay'))
+    document.getElementById('pdoverlay').classList.remove('on');
+}
+function shareProduct(id){
+  const p=getP(id);if(!p)return;
+  const txt=`✨ *${p.n}*\n${p.sub?p.sub+' · ':''}Amway\n\n${p.desc||''}\n\n💰 Precio: *${fmt(p.pub)}*`;
+  if(navigator.share)navigator.share({title:p.n,text:txt}).catch(()=>{});
+  else navigator.clipboard.writeText(txt).then(()=>toast('Copiado ✓'));
+}
+
+// ═══════════════════════════════════════════
+// CART
+// ═══════════════════════════════════════════
+function addCart(id){
+  const ex=cart.find(i=>i.id===id);
+  if(ex)ex.qty++;else cart.push({id,qty:1});
+  localStorage.setItem('client_cart',JSON.stringify(cart));
+  updateBadge();
+  toast('Agregado ✓');
+}
+function updateBadge(){
+  const total=cart.reduce((s,i)=>s+i.qty,0);
+  const b1=document.getElementById('cart-badge');
+  const b2=document.getElementById('cart-badge-nav');
+  [b1,b2].forEach(b=>{if(!b)return;b.textContent=total;b.style.display=total?'inline-block':'none';});
+}
+function renderCart(){
+  const el=document.getElementById('cart-list');
+  if(!cart.length){
+    el.innerHTML=`<div class="empty">
+      <svg viewBox="0 0 24 24" width="52" height="52" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <p>Agregá productos desde el Catálogo</p></div>`;
+    return;
+  }
+  el.innerHTML=cart.map(item=>{
+    const p=getP(item.id);if(!p)return '';
+    return`<div class="ci">
+      <div class="cin">
+        <div class="cin-name">${p.n}</div>
+        <div style="font-size:11px;color:var(--ts);margin-top:1px">Cód. ${p.cod}</div>
+        <div class="cin-price">${fmt(p.pub)} × ${item.qty} = <strong>${fmt(p.pub*item.qty)}</strong></div>
+      </div>
+      <div class="qc">
+        <button class="qb" onclick="chQty('${item.id}',-1)">−</button>
+        <span class="qn">${item.qty}</span>
+        <button class="qb" onclick="chQty('${item.id}',1)">+</button>
+        <button class="qd" onclick="remItem('${item.id}')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function updateFooter(){
+  const total=cart.reduce((s,i)=>{const p=getP(i.id);return s+(p?p.pub*i.qty:0);},0);
+  const footer=document.getElementById('cart-footer');
+  footer.classList.toggle('on',cart.length>0);
+  document.getElementById('cf-amount').textContent=fmt(total);
+}
+function chQty(id,d){
+  const it=cart.find(i=>i.id===id);if(!it)return;
+  it.qty+=d;
+  if(it.qty<=0)cart=cart.filter(i=>i.id!==id);
+  localStorage.setItem('client_cart',JSON.stringify(cart));
+  renderCart();updateBadge();updateFooter();
+}
+function remItem(id){cart=cart.filter(i=>i.id!==id);localStorage.setItem('client_cart',JSON.stringify(cart));renderCart();updateBadge();updateFooter();}
+function clearCart(){
+  if(!confirm('¿Vaciar el carrito?'))return;
+  cart=[];localStorage.setItem('client_cart','[]');
+  renderCart();updateBadge();updateFooter();
+}
+
+// ═══════════════════════════════════════════
+// SEND ORDER VIA WHATSAPP
+// ═══════════════════════════════════════════
+function sendOrder(){
+  if(!CFG||!CFG.tel){toast('Error: tienda sin configurar');return;}
+  if(!cart.length){toast('El carrito está vacío');return;}
+  // Ask for client name first
+  document.getElementById('mbox').innerHTML=`
+    <div class="mtitle">¿Cómo te llamás?</div>
+    <div class="mstep">Para personalizar tu pedido</div>
+    <input class="finput" id="client-name" placeholder="Nombre y apellido" autofocus>
+    <button class="btnp" onclick="confirmOrder()">Enviar pedido 📱</button>
+    <button class="btns" onclick="closeModal()">Cancelar</button>`;
+  openModal();
+}
+function confirmOrder(){
+  const nombre=(document.getElementById('client-name').value.trim())||'Un cliente';
+  const total=cart.reduce((s,i)=>{const p=getP(i.id);return s+(p?p.pub*i.qty:0);},0);
+  const lines=cart.map(it=>{
+    const p=getP(it.id);
+    return p?`• ${it.qty}× ${p.n} [Cód. ${p.cod}] — ${fmt(p.pub*it.qty)}`:null;
+  }).filter(Boolean);
+  const msg=
+`Hola! Soy *${nombre}* y quiero hacer este pedido 🌿
+
+${lines.join('\n')}
+
+─────────────────
+*TOTAL: ${fmt(total)}*
+
+¡Muchas gracias! 😊`;
+  const waUrl=`https://wa.me/${CFG.tel}?text=${encodeURIComponent(msg)}`;
+  closeModal();
+  // Clear cart after sending
+  setTimeout(()=>{
+    window.open(waUrl,'_blank');
+    cart=[];localStorage.setItem('client_cart','[]');
+    renderCart();updateBadge();updateFooter();
+    toast('¡Pedido enviado! ✓');
+  },200);
+}
+
+// ═══════════════════════════════════════════
+// MODAL / TOAST
+// ═══════════════════════════════════════════
+function openModal(){document.getElementById('moverlay').classList.add('on');}
+function closeModal(e){if(!e||e.target===document.getElementById('moverlay'))document.getElementById('moverlay').classList.remove('on');}
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('on');
+  clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),2500);
+}
+</script>
+</body>
+</html>
