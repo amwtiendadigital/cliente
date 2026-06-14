@@ -6,6 +6,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#1D7A52">
+<link rel="manifest" href="manifest-client.json">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>AmwDigital</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -648,6 +650,32 @@ function toast(msg){
   const el=document.getElementById('toast');
   el.textContent=msg;el.classList.add('on');
   clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),2500);
+}
+
+// ═══════════════════════════════════════════
+// SERVICE WORKER — network-first (auto-actualiza precios)
+// ═══════════════════════════════════════════
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw-client.js').then(reg => {
+      // Check for updates every time the app opens
+      reg.update();
+      // If a new SW is waiting, activate it immediately
+      reg.addEventListener('updatefound', () => {
+        const newSW = reg.installing;
+        newSW.addEventListener('statechange', () => {
+          if(newSW.state === 'installed' && navigator.serviceWorker.controller){
+            // New version available — reload to pick up latest prices/catalog
+            newSW.postMessage({type:'SKIP_WAITING'});
+          }
+        });
+      });
+    }).catch(()=>{});
+    // Reload page when new SW takes control
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      window.location.reload();
+    });
+  });
 }
 </script>
 </body>
