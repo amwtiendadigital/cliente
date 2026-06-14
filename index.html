@@ -261,7 +261,32 @@ function getHashConfig(){
   const nombre=p.get('nombre')||'Mi Tienda AmwDigital';
   return tel?{tel,nombre}:null;
 }
-const CFG=getHashConfig();
+// Load config: hash takes priority, then localStorage (for installed PWA launch)
+const CFG = getHashConfig() || JSON.parse(localStorage.getItem('clientCFG')||'null');
+if(getHashConfig()) localStorage.setItem('clientCFG', JSON.stringify(CFG));
+
+// Dynamic manifest: sets start_url to the current full URL (including hash)
+// so the installed PWA always opens the right store
+(function injectManifest(){
+  const startUrl = location.href; // full URL with hash if present
+  const appName = CFG ? CFG.nombre : 'AmwDigital';
+  const m = {
+    name: appName, short_name: 'AmwDigital',
+    description: 'Tienda digital de productos Amway',
+    start_url: startUrl,
+    display: 'standalone',
+    background_color: '#1D7A52', theme_color: '#1D7A52',
+    orientation: 'portrait',
+    icons: [
+      {src:'icon-192.png',sizes:'192x192',type:'image/png',purpose:'any'},
+      {src:'icon-512.png',sizes:'512x512',type:'image/png',purpose:'any'},
+      {src:'icon-512.png',sizes:'512x512',type:'image/png',purpose:'maskable'}
+    ]
+  };
+  const blob = new Blob([JSON.stringify(m)],{type:'application/json'});
+  const link = document.querySelector('link[rel="manifest"]');
+  if(link) link.href = URL.createObjectURL(blob);
+})();
 
 // ═══════════════════════════════════════════
 // DATA
