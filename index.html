@@ -276,7 +276,10 @@ const PAIS = CFG?.pais || 'AR';
 const CAT_ICON={'Nutrición':'🌿','Belleza':'✨','Cuidado Personal':'🧴','Hogar':'🏠'};
 const catIcon=cat=>CAT_ICON[cat]||'📦';
 const fmt=n=>'$'+Math.round(n).toLocaleString('es-AR');
-const imgUrl=cod=>`https://www.amway.com.ar/img_pict/380_Catalog/Products/large/380_${cod}.jpg`;
+const CA_COUNTRIES=['GT','SV','HN','PA','CR'];
+const imgUrl=cod=>CA_COUNTRIES.includes(PAIS)
+  ?`https://www.amway.com.hn/img_pict/520_Catalog/Products/large/520_${cod}.jpg`
+  :`https://www.amway.com.ar/img_pict/380_Catalog/Products/large/380_${cod}.jpg`;
 
 const AMWAY_SHEET_ID = '1EiMWr8BYAscQjfzg-sQ4l9448hbLel7S0Roxf28-lYY';
 const SYNC_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6hT4SJxlkUtxUoqkhFqiAahgB5zME7g7LGjXTyOaZFT1luygOYtAfd1I-UC9dJccTDMNK15miYe03/pub?gid=1781130644&single=true&output=csv';
