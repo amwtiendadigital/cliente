@@ -281,8 +281,12 @@ const IMG_SERVERS={
   GT:{host:'www.amway.com.hn',px:'520'},SV:{host:'www.amway.com.hn',px:'520'},
   HN:{host:'www.amway.com.hn',px:'520'},PA:{host:'www.amway.com.hn',px:'520'},
   CR:{host:'www.amway.com.hn',px:'520'},
+  CL:{host:'www.amway.cl',px:'400'},UY:{host:'www.amway.com.uy',px:'440'},
 };
+const CO_API='blt61e661dff490fa0d';
+const CO_IMGS={'321227':'blt0df9134f13cce9e7/6808215ff6a4e4424df9fdfd','122339':'blt069dde798b7ca5c4/67ecf9e75a47dd5ab64dce76','103972':'bltbdc1e33bc03b7001/67db9c891c722269eb43b3c2'};
 const imgUrl=cod=>{
+  if(PAIS==='CO'&&CO_IMGS[cod])return`https://www.amway.com.co/assets/amshop/v3/assets/${CO_API}/${CO_IMGS[cod]}/${cod}_01.jpg`;
   const s=IMG_SERVERS[PAIS]||{host:'www.amway.com.ar',px:'380'};
   return`https://${s.host}/img_pict/${s.px}_Catalog/Products/large/${s.px}_${cod}.jpg`;
 };
@@ -325,12 +329,22 @@ function prodsFromGvizTable(table){
   const ck=fi(['codigo','code','cod']),nk=fi(['nombre','name','producto']),catk=fi(['categ','cat']);
   const gv=(r,k)=>k>=0?String(r.c[k]?.v??''):'';
   const num=v=>parseFloat(String(v).replace(/[$,"]/g,''))||0;
-  const COD_FIX={'l.o.c.':'0001','pursue':'3878','tapa vertedora':'5113','tapa medidora':'5113','black cohosh':'8085','omega 3 plus 90':'8914'};
+  const COD_FIX={'l.o.c.':'0001','pursue':'3878','tapa vertedora':'5113','tapa medidora':'5113','black cohosh':'8085','omega 3 plus 90':'8914','omega 3 90':'8914','carb blocker':'106542','prefiltro':'2087','d+1 prende':'321227','dosificador de bombeo':'103972'};
+  const COD_FIX_CO={'mascarilla':'122339'};
+  const NAME_FIX_CL={'nutrilite carb blocker':'Cerocarb'};
+  const HIDDEN_GLOBAL=['xs individual','kit de inicio','kit inicio'];
+  const HIDDEN_CO=['d+1 ilumina','suero reafirmante','toallitas desmaquillantes','gel control imperfecciones','iluminador para los ojos','hidratante + antioxidante'];
   return table.rows.map((r,i)=>{
     let cod=gv(r,ck);
-    const nom=gv(r,nk),pub=num(gv(r,pk)),pts=num(gv(r,ptk)),cat=gv(r,catk)||'General';
+    let nom=gv(r,nk);
+    const pub=num(gv(r,pk)),pts=num(gv(r,ptk)),cat=gv(r,catk)||'General';
     if(!nom||pub<=0)return null;
-    if(!cod){const key=Object.keys(COD_FIX).find(k=>nom.toLowerCase().includes(k));if(key)cod=COD_FIX[key];}
+    const nomL=nom.toLowerCase();
+    if(HIDDEN_GLOBAL.some(h=>nomL.includes(h)))return null;
+    if(PAIS==='CO'&&HIDDEN_CO.some(h=>nomL.includes(h)))return null;
+    if(PAIS==='CL'){const k=Object.keys(NAME_FIX_CL).find(k2=>nomL.includes(k2));if(k)nom=NAME_FIX_CL[k];}
+    if(!cod){const key=Object.keys(COD_FIX).find(k=>nomL.includes(k));if(key)cod=COD_FIX[key];}
+    if(!cod&&PAIS==='CO'){const key=Object.keys(COD_FIX_CO).find(k=>nomL.includes(k));if(key)cod=COD_FIX_CO[key];}
     return{id:cod||String(i),n:nom,cat,sub:cat,cod:cod||String(i),pub,pts,desc:''};
   }).filter(Boolean);
 }
