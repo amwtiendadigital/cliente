@@ -274,6 +274,55 @@ const catIcon=cat=>CAT_ICON[cat]||'📦';
 const fmt=n=>'$'+Math.round(n).toLocaleString('es-AR');
 const imgUrl=cod=>`https://www.amway.com.ar/img_pict/380_Catalog/Products/large/380_${cod}.jpg`;
 
+const SYNC_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6hT4SJxlkUtxUoqkhFqiAahgB5zME7g7LGjXTyOaZFT1luygOYtAfd1I-UC9dJccTDMNK15miYe03/pub?gid=1781130644&single=true&output=csv';
+const SYNC_LS_KEY  = 'clientProds_v2';
+const SYNC_TS_KEY  = 'clientProdTs_v2';
+
+function loadGviz(sheetId,gid){
+  return new Promise((resolve,reject)=>{
+    const cb='_gv'+Date.now();
+    const s=document.createElement('script');
+    const t=setTimeout(()=>{s.remove();delete window[cb];reject(new Error('timeout'));},15000);
+    window[cb]=(r)=>{clearTimeout(t);s.remove();delete window[cb];r.status==='ok'?resolve(r.table):reject(new Error(r.status||'err'));};
+    s.onerror=()=>{clearTimeout(t);s.remove();delete window[cb];reject(new Error('net'));};
+    s.src=`https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json;responseHandler:${cb}&gid=${gid}`;
+    document.head.appendChild(s);
+  });
+}
+
+async function syncPrices(){
+  try{
+    const table=await loadGviz('1EiMWr8BYAscQjfzg-sQ4l9448hbLel7S0Roxf28-lYY','1781130644');
+    const cols=table.cols.map(c=>c.label.toLowerCase());
+    const fi=pats=>cols.findIndex(c=>pats.some(p=>c.includes(p)));
+    const pk=fi(['pub','suger','retail','venta']);
+    const ptk=fi(['punto','pts','point']);
+    const ck=fi(['codigo','code','cod']);
+    const nk=fi(['nombre','name','producto']);
+    const catk=fi(['categ','cat']);
+    const gv=(r,k)=>k>=0?String(r.c[k]?.v??''):'';
+    const num=v=>parseFloat(String(v).replace(/[$,"]/g,''))||0;
+    const fresh=table.rows.map((r,i)=>{
+      const cod=gv(r,ck),nom=gv(r,nk),pub=num(gv(r,pk)),pts=num(gv(r,ptk)),cat=gv(r,catk)||'General';
+      if(!nom||pub<=0)return null;
+      return{id:cod||String(i),n:nom,cat,sub:cat,cod:cod||String(i),pub,pts,desc:''};
+    }).filter(Boolean);
+    if(fresh.length){
+      localStorage.setItem(SYNC_LS_KEY,JSON.stringify(fresh));
+      localStorage.setItem(SYNC_TS_KEY,Date.now());
+      PRODS.length=0;PRODS.push(...fresh);
+      initCats();renderProducts();
+    }
+  }catch(e){console.warn('sync error',e);}
+}
+
+function loadSyncedProds(){
+  try{
+    const s=localStorage.getItem(SYNC_LS_KEY);
+    return s?JSON.parse(s):null;
+  }catch{return null;}
+}
+
 const PRODS=[
   {id:'120843',n:'Double X Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'120843',pub:117474,pts:29.24,desc:'Multivitamínico, multimineral y fitoquímico avanzado. 12 vitaminas, 10 minerales y concentrado de 22 plantas.'},
   {id:'110178',n:'B Plus Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'110178',pub:24421,pts:6.08,desc:'Complejo de 8 vitaminas del grupo B para el metabolismo energético y la función del sistema nervioso.'},
@@ -658,6 +707,17 @@ function toast(msg){
 // ═══════════════════════════════════════════
 // SERVICE WORKER — network-first (auto-actualiza precios)
 // ═══════════════════════════════════════════
+// ═══════════════════════════════════════════
+// INIT — cargar precios sincronizados y auto-sync si pasó más de 1 hora
+// ═══════════════════════════════════════════
+(function initSync(){
+  const cached = loadSyncedProds();
+  if(cached && cached.length){ PRODS.length=0; PRODS.push(...cached); }
+  initCats(); renderProducts();
+  const ts = parseInt(localStorage.getItem(SYNC_TS_KEY)||'0');
+  if(Date.now() - ts > 60*60*1000) syncPrices();
+})();
+
 if('serviceWorker' in navigator){
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw-client.js').then(reg => {
