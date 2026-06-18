@@ -6,8 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#1D7A52">
-<link rel="manifest" href="manifest-client.json">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
 <title>AmwDigital</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -23,225 +22,344 @@
 html,body{height:100%;overflow:hidden;background:#F2F2F7!important}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F2F2F7!important;color:#111!important;display:flex;flex-direction:column}
 
-/* NAV */
-#nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav) + var(--safe));background:var(--card)!important;border-top:.5px solid var(--border);display:flex;align-items:flex-start;padding-top:8px;z-index:90}
-.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;background:none;border:none;cursor:pointer;color:var(--ts);font-size:12px;font-family:inherit;position:relative;transition:color .15s}
+/* ── NAV ── */
+#nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav) + var(--safe));background:var(--card);border-top:.5px solid var(--border);display:flex;align-items:flex-start;padding-top:6px;z-index:90;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;background:none;border:none;cursor:pointer;color:var(--ts);font-size:12px;font-family:inherit;position:relative;transition:color .15s}
 .nb.on{color:var(--g)}
 .nb svg{width:26px;height:26px;stroke-width:1.8;fill:none;stroke:currentColor}
-#cart-badge{display:none;position:absolute;top:0;right:calc(50% - 22px);background:#E24B4A;color:#fff;border-radius:10px;font-size:10px;padding:1px 5px;min-width:18px;text-align:center;font-weight:700}
+#cart-badge{display:none;position:absolute;top:2px;right:calc(50% - 20px);background:var(--g);color:#fff;border-radius:10px;font-size:10px;padding:1px 5px;min-width:18px;text-align:center;font-weight:600}
 
-/* APP */
+/* ── APP ── */
 #app{flex:1;overflow:hidden;position:relative;padding-bottom:calc(var(--nav) + var(--safe))}
 .view{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:none;padding-bottom:16px}
 .view.on{display:block}
 
-/* PAGE HEADER */
-.vh{padding:14px 16px 10px;background:var(--card)!important;border-bottom:.5px solid var(--border);position:sticky;top:0;z-index:40}
-.vh h1{font-size:22px;font-weight:700;line-height:1}
+/* ── PAGE HEADER ── */
+.vh{padding:14px 16px 10px;background:var(--card);border-bottom:.5px solid var(--border);position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.vh h1{font-size:24px;font-weight:700;line-height:1}
 .vh-row{display:flex;justify-content:space-between;align-items:center}
+.link-btn{background:none;border:none;color:var(--g);cursor:pointer;font-size:13px;font-weight:500;font-family:inherit;padding:4px}
 
-/* SEARCH */
+/* ── SEARCH ── */
 .srch{display:flex;align-items:center;gap:8px;background:var(--bg);border-radius:10px;padding:0 10px;margin-top:10px}
 .srch svg{opacity:.35;flex-shrink:0;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}
 .srch input{flex:1;border:none;background:none;padding:11px 0;font-size:16px;color:var(--t);outline:none;font-family:inherit}
 .srch input::placeholder{color:var(--ts)}
 
-/* PILLS */
+/* ── PILLS ── */
 .pills{display:flex;gap:7px;overflow-x:auto;padding:10px 14px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .pills::-webkit-scrollbar{display:none}
 .pill{flex-shrink:0;padding:7px 16px;border-radius:20px;font-size:14px;border:.5px solid var(--border);background:var(--card);color:var(--ts);cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
 .pill.on{background:var(--g);color:#fff;border-color:var(--g)}
 
-/* PRODUCT GRID */
+/* ── PRODUCT GRID ── */
 .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 12px}
 .pc{background:var(--card);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);cursor:pointer;transition:transform .12s}
 .pc:active{transform:scale(.97)}
-.pc-img-wrap{background:#f5f5f5;height:130px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.pc-img{width:100%;height:100%;object-fit:contain;padding:8px}
-.pc-placeholder{font-size:38px}
+.pc-img-wrap{background:#f5f5f5;height:130px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.pc-img{width:100%;height:100%;object-fit:contain;padding:10px}
+.pc-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:38px}
 .pc-body{padding:10px 11px 11px;flex:1;display:flex;flex-direction:column;gap:3px}
 .pc-name{font-size:14px;font-weight:500;line-height:1.35;flex:1}
 .pc-pub{font-size:17px;color:var(--g);font-weight:700;margin-top:4px}
+.pc-emp{font-size:13px;color:var(--ts)}
 .pc-foot{display:flex;justify-content:space-between;align-items:center;margin-top:7px}
 .pc-pts{font-size:11px;color:var(--g);background:var(--gl);padding:3px 8px;border-radius:6px;font-weight:500}
-.pc-add{width:36px;height:36px;border-radius:10px;border:none;background:var(--g);color:#fff;cursor:pointer;font-size:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pc-add{width:36px;height:36px;border-radius:10px;border:none;background:var(--g);color:#fff;cursor:pointer;font-size:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .12s}
+.pc-add:active{transform:scale(.88)}
 
-/* PRODUCT DETAIL */
-#pdoverlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;display:none;align-items:flex-end;backdrop-filter:blur(6px)}
+/* ── PRODUCT DETAIL MODAL ── */
+#pdoverlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;display:none;align-items:flex-end;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 #pdoverlay.on{display:flex}
-#pdbox{background:var(--card);border-radius:22px 22px 0 0;width:100%;max-height:92vh;overflow-y:auto;padding-bottom:calc(20px + var(--safe));position:relative}
+#pdbox{background:var(--card);border-radius:22px 22px 0 0;width:100%;max-height:92vh;overflow-y:auto;padding-bottom:calc(20px + var(--safe))}
 .pd-img-wrap{background:#f5f5f5;width:100%;aspect-ratio:1.4;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .pd-img{width:100%;height:100%;object-fit:contain;padding:20px}
-.pd-placeholder{font-size:80px}
+.pd-placeholder{font-size:80px;line-height:1}
 .pd-info{padding:16px 18px}
 .pd-sub{font-size:12px;color:var(--ts);font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
 .pd-name{font-size:19px;font-weight:700;line-height:1.25;margin-bottom:10px}
 .pd-desc{font-size:14px;color:var(--ts);line-height:1.55;margin-bottom:14px}
 .pd-prices{background:var(--bg);border-radius:var(--rs);padding:12px 14px;margin-bottom:14px}
 .pd-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0}
+.pd-row+.pd-row{border-top:.5px solid var(--border)}
 .pd-plabel{font-size:13px;color:var(--ts)}
-.pd-pval{font-size:18px;font-weight:700;color:var(--g)}
+.pd-pval{font-size:16px;font-weight:600}
+.pd-pval.emp{color:var(--g)}
+.pd-pval.pub{color:var(--t)}
 .pd-pts{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--g);background:var(--gl);padding:4px 10px;border-radius:20px;margin-bottom:16px}
 .pd-btns{display:flex;gap:10px}
 .pd-btn-share{flex:1;background:var(--bg);border:.5px solid var(--border);color:var(--t);border-radius:var(--rs);padding:13px;font-size:15px;cursor:pointer;font-family:inherit;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px}
 .pd-btn-add{flex:2;background:var(--g);color:#fff;border:none;border-radius:var(--rs);padding:13px;font-size:15px;cursor:pointer;font-family:inherit;font-weight:500}
 .pd-close{position:absolute;top:14px;right:16px;width:30px;height:30px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--ts)}
+#pdbox{position:relative}
 
-/* CART */
-.ci{background:var(--card);margin:0 12px 8px;border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow)}
+/* ── CALC ── */
+.ptoggle{display:flex;gap:6px;padding:10px 12px}
+.ptb{flex:1;padding:7px 4px;border-radius:var(--rs);border:.5px solid var(--border);background:var(--card);color:var(--ts);cursor:pointer;font-size:13px;font-family:inherit;transition:all .15s}
+.ptb.on{background:var(--g);color:#fff;border-color:var(--g)}
+.ci{background:var(--card);margin:0 12px 8px;border-radius:var(--r);padding:10px 12px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow)}
 .cin{flex:1;min-width:0}
-.cin-name{font-size:14px;font-weight:500;line-height:1.3}
-.cin-price{font-size:13px;color:var(--ts);margin-top:3px}
+.cin-name{font-size:13px;font-weight:500;line-height:1.3}
+.cin-price{font-size:12px;color:var(--ts);margin-top:2px}
 .qc{display:flex;align-items:center;gap:5px;flex-shrink:0}
-.qb{width:30px;height:30px;border-radius:9px;border:.5px solid var(--border);background:var(--bg);color:var(--t);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;font-family:inherit}
-.qn{min-width:24px;text-align:center;font-size:15px;font-weight:600}
-.qd{width:30px;height:30px;border-radius:9px;border:none;background:none;color:#E24B4A;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.qb{width:28px;height:28px;border-radius:8px;border:.5px solid var(--border);background:var(--bg);color:var(--t);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;font-family:inherit}
+.qn{min-width:22px;text-align:center;font-size:14px;font-weight:500}
+.qd{width:28px;height:28px;border-radius:8px;border:none;background:none;color:#E24B4A;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .qd svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}
-
-/* EMPTY */
-.empty{text-align:center;padding:70px 24px;color:var(--ts)}
+.empty{text-align:center;padding:60px 24px;color:var(--ts)}
 .empty svg{opacity:.2;margin-bottom:12px}
-.empty p{font-size:15px}
+.empty p{font-size:14px}
 
-/* CART FOOTER (fixed) */
-#cart-footer{
-  position:fixed;bottom:calc(var(--nav) + var(--safe));left:0;right:0;
-  background:var(--card)!important;border-top:.5px solid var(--border);
-  padding:12px 16px;z-index:85;display:none;
-  box-shadow:0 -4px 16px rgba(0,0,0,.08)
-}
-#cart-footer.on{display:block}
-.cf-totals{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.cf-label{font-size:12px;color:var(--ts)}
-.cf-amount{font-size:24px;font-weight:700;color:var(--g)}
-.cf-note{font-size:11px;color:var(--ts)}
-.cf-pts{font-size:12px;color:var(--g);background:var(--gl);padding:3px 9px;border-radius:8px;font-weight:600}
-#send-btn{
-  width:100%;background:var(--g);color:#fff;border:none;border-radius:var(--rs);
-  padding:15px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;
-  display:flex;align-items:center;justify-content:center;gap:8px
-}
-#send-btn:active{opacity:.88}
-#scroll-cart{padding-bottom:160px}
+/* ── TOTALS BAR ── */
+#tbar{position:fixed;bottom:calc(var(--nav) + var(--safe));left:0;right:0;background:var(--card)!important;border-top:.5px solid var(--border);padding:11px 16px 11px;display:none;z-index:85;box-shadow:0 -4px 16px rgba(0,0,0,.08)}
+.tinfo{flex:1}
+.tlabel{font-size:11px;color:var(--ts)}
+.tamount{font-size:22px;font-weight:700;color:var(--g)}
+.tbtns{display:flex;gap:8px}
+.tshare{background:var(--bg);border:.5px solid var(--border);color:var(--t);border:none;border-radius:var(--rs);padding:10px 14px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;flex-shrink:0}
+.tpdf{background:var(--g);color:#fff;border:none;border-radius:var(--rs);padding:10px 14px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;flex-shrink:0;display:flex;align-items:center;gap:5px}
+#calc-view{display:flex;flex-direction:column;height:100%}
+#calc-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:90px}
 
-/* MODAL */
-#moverlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:none;align-items:flex-end;backdrop-filter:blur(5px)}
+/* ── ORDERS ── */
+.olist{padding:12px;display:flex;flex-direction:column;gap:10px}
+.oc{background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
+.och{padding:14px;display:flex;justify-content:space-between;align-items:flex-start;cursor:pointer}
+.ocn{font-size:15px;font-weight:600}
+.ocm{font-size:12px;color:var(--ts);margin-top:2px}
+.oct{font-size:17px;font-weight:700;color:var(--g)}
+.oblist{border-top:.5px solid var(--border)}
+.obr{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:.5px solid var(--border)}
+.obr:last-child{border-bottom:none}
+.obn{font-size:14px;font-weight:500}
+.obsub{font-size:11px;color:var(--ts);margin-top:1px}
+.obt{font-size:15px;font-weight:700;color:var(--g)}
+.oa{display:flex;gap:8px;padding:10px 14px;border-top:.5px solid var(--border)}
+.btn-sm{flex:1;padding:8px;border-radius:8px;border:.5px solid var(--border);background:var(--bg);color:var(--t);cursor:pointer;font-size:13px;font-family:inherit}
+.btn-del{background:none;border:none;color:#E24B4A;cursor:pointer;font-size:13px;padding:8px;font-family:inherit}
+.fab{position:fixed;right:16px;bottom:calc(var(--nav) + var(--safe) + 16px);width:54px;height:54px;border-radius:16px;background:var(--g);color:#fff;border:none;cursor:pointer;font-size:28px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(29,122,82,.4);z-index:50;transition:transform .15s}
+.fab:active{transform:scale(.92)}
+
+/* ── SETTINGS ── */
+.stitle{font-size:12px;color:var(--ts);padding:18px 16px 6px;text-transform:uppercase;letter-spacing:.05em;font-weight:500}
+.ssec{background:var(--card);border-radius:var(--r);margin:0 12px;overflow:hidden;box-shadow:var(--shadow)}
+.srow{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:.5px solid var(--border);cursor:pointer}
+.srow:last-child{border-bottom:none}
+.slabel{font-size:15px}
+.sval{font-size:14px;color:var(--ts)}
+.sval.red{color:#E24B4A}
+.sval.grn{color:var(--g)}
+
+/* ── MAIN MODAL ── */
+#moverlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:none;align-items:flex-end;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
 #moverlay.on{display:flex}
-#mbox{background:var(--card);border-radius:22px 22px 0 0;width:100%;max-height:92vh;overflow-y:auto;padding:24px 18px calc(28px + var(--safe))}
-.mtitle{font-size:20px;font-weight:700;margin-bottom:4px}
-.mstep{font-size:13px;color:var(--ts);margin-bottom:18px}
+#mbox{background:var(--card);border-radius:22px 22px 0 0;width:100%;max-height:92vh;overflow-y:auto;padding:20px 16px calc(24px + var(--safe))}
+.mtitle{font-size:18px;font-weight:700;margin-bottom:3px}
+.mstep{font-size:12px;color:var(--ts);margin-bottom:16px}
 .flabel{font-size:13px;color:var(--ts);margin-bottom:5px;display:block;font-weight:500}
-.finput{width:100%;border:.5px solid var(--border);border-radius:var(--rs);padding:12px 14px;font-size:16px;background:var(--bg);color:var(--t);font-family:inherit;outline:none;margin-bottom:14px;transition:border-color .15s}
+.finput{width:100%;border:.5px solid var(--border);border-radius:var(--rs);padding:11px 13px;font-size:15px;background:var(--bg);color:var(--t);font-family:inherit;outline:none;margin-bottom:13px;transition:border-color .15s}
 .finput:focus{border-color:var(--g)}
-.btnp{width:100%;background:var(--g);color:#fff;border:none;border-radius:var(--rs);padding:15px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px}
-.btns{width:100%;background:var(--bg);color:var(--t);border:.5px solid var(--border);border-radius:var(--rs);padding:13px;font-size:15px;cursor:pointer;font-family:inherit;margin-top:8px}
+textarea.finput{resize:none;line-height:1.5}
+.btnp{width:100%;background:var(--g);color:#fff;border:none;border-radius:var(--rs);padding:14px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:4px}
+.btns{width:100%;background:var(--bg);color:var(--t);border:.5px solid var(--border);border-radius:var(--rs);padding:12px;font-size:15px;cursor:pointer;font-family:inherit;margin-top:8px}
 .btnp:active,.btns:active{opacity:.85}
-.link-btn{background:none;border:none;color:var(--g);cursor:pointer;font-size:14px;font-weight:500;font-family:inherit;padding:4px}
+.mscroll{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.mscroll::-webkit-scrollbar{display:none}
+.mpill{flex-shrink:0;padding:5px 11px;border-radius:16px;border:.5px solid var(--border);background:var(--card);color:var(--ts);cursor:pointer;font-size:12px;font-family:inherit}
+.mpill.on{background:var(--g);color:#fff;border-color:var(--g)}
+.apr{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:.5px solid var(--border)}
+.apr:last-child{border-bottom:none}
+.apinfo{flex:1;min-width:0}
+.apname{font-size:13px;font-weight:500;line-height:1.3}
+.apprice{font-size:12px;color:var(--g);font-weight:500}
+.apbtns{display:flex;flex-wrap:wrap;gap:4px;flex-shrink:0;max-width:140px;justify-content:flex-end}
+.apb{padding:4px 9px;border-radius:7px;border:.5px solid var(--border);background:var(--bg);font-size:11px;cursor:pointer;font-family:inherit;white-space:nowrap;font-weight:500}
+.apb:active{background:var(--gl);color:var(--g)}
+.asr{display:flex;align-items:center;gap:6px;padding:7px 0;border-bottom:.5px solid var(--border)}
+.asr:last-child{border-bottom:none}
+.asinfo{flex:1;min-width:0;font-size:12px;line-height:1.4}
+.asqc{display:flex;align-items:center;gap:3px;flex-shrink:0}
+.asqb{width:24px;height:24px;border-radius:6px;border:.5px solid var(--border);background:var(--bg);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;font-family:inherit}
+.asqn{min-width:18px;text-align:center;font-size:13px;font-weight:500}
+.asqd{border:none;background:none;color:#E24B4A;cursor:pointer;padding:4px;display:flex;align-items:center}
+.asqd svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2}
+.sum-card{background:var(--bg);border-radius:var(--r);overflow:hidden;margin-bottom:16px}
+.sum-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:.5px solid var(--border)}
+.sum-row:last-child{border-bottom:none}
+.sum-name{font-size:14px;font-weight:500}
+.sum-sub{font-size:11px;color:var(--ts);margin-top:1px}
+.sum-total{font-size:16px;font-weight:700;color:var(--g)}
+.sum-grand{display:flex;justify-content:space-between;padding:0 4px;margin-bottom:20px;font-size:15px;font-weight:600}
+.provb{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border:.5px solid var(--border);border-radius:var(--rs);background:var(--card);cursor:pointer;font-size:14px;font-family:inherit;margin-bottom:7px;width:100%;color:var(--t)}
+.provb:active{background:var(--gl)}
+.prov-iibb{font-size:13px;color:var(--g);font-weight:600}
 
-/* SETUP SCREEN */
-#setup-screen{position:fixed;inset:0;background:#F2F2F7;z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center}
-#setup-screen h2{font-size:26px;font-weight:800;color:var(--g);margin-bottom:8px}
-#setup-screen p{font-size:14px;color:var(--ts);line-height:1.6;margin-bottom:24px}
-.setup-box{background:var(--card);border-radius:var(--r);padding:20px;width:100%;max-width:400px;text-align:left;box-shadow:var(--shadow)}
-.setup-url{background:var(--bg);border-radius:var(--rs);padding:12px;font-size:12px;word-break:break-all;color:var(--ts);margin:12px 0;font-family:monospace;line-height:1.5}
-.copy-btn{width:100%;background:var(--g);color:#fff;border:none;border-radius:var(--rs);padding:13px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:4px}
-
-/* TOAST */
-#toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:rgba(20,20,20,.92);color:#fff;padding:9px 20px;border-radius:20px;font-size:14px;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap}
+/* ── TOAST ── */
+#toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:rgba(20,20,20,.92);color:#fff;padding:9px 20px;border-radius:20px;font-size:14px;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;backdrop-filter:blur(8px)}
 #toast.on{opacity:1}
+.note{font-size:12px;color:var(--ts);padding:10px 16px}
+
+/* ── PRINT / PRESUPUESTO ── */
+#presupuesto-print{display:none}
+@media print{
+  body>*{display:none!important}
+  #presupuesto-print{display:block!important;font-family:Arial,sans-serif;color:#000;padding:0;margin:0}
+  .pp-header{background:#1D7A52;color:white;padding:20px 24px;display:flex;justify-content:space-between;align-items:flex-start}
+  .pp-logo{font-size:28px;font-weight:900;letter-spacing:-1px}
+  .pp-title{font-size:13px;opacity:.8;margin-top:2px}
+  .pp-meta{text-align:right;font-size:13px;line-height:1.6}
+  .pp-meta strong{font-size:15px}
+  .pp-body{padding:24px}
+  .pp-client{font-size:14px;margin-bottom:20px;padding:12px;background:#f5f5f5;border-radius:8px}
+  .pp-client strong{font-size:16px;color:#1D7A52}
+  table.pp-table{width:100%;border-collapse:collapse;margin-bottom:20px}
+  table.pp-table th{background:#1D7A52;color:white;padding:9px 10px;text-align:left;font-size:12px;font-weight:600}
+  table.pp-table td{padding:8px 10px;font-size:13px;border-bottom:1px solid #eee}
+  table.pp-table tr:last-child td{border-bottom:none}
+  table.pp-table tfoot td{border-top:2px solid #1D7A52;font-weight:700;font-size:14px;background:#f0f9f5;color:#1D7A52}
+  .pp-footer{font-size:11px;color:#888;padding:12px;border-top:1px solid #eee;text-align:center}
+}
+#filein{display:none}
+
+/* ── TOGGLE SWITCH ── */
+.sw{width:44px;height:26px;border-radius:13px;background:var(--th);border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;padding:0;display:inline-block}
+.sw::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sw.on{background:var(--g)}
+.sw.on::after{left:21px}
+
+/* ── CLIENT BANNER ── */
+#client-banner{background:var(--g);border-radius:8px;padding:6px 10px;margin:8px 0 0;font-size:12px;color:#fff;font-weight:600;text-align:center;display:none}
+#client-banner.on{display:block}
+
+/* ── COUNTRY / LANG GRID ── */
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.cgb{background:var(--bg);border:.5px solid var(--border);border-radius:var(--rs);padding:12px 8px;cursor:pointer;font-family:inherit;text-align:center;transition:all .15s;color:var(--t)}
+.cgb.on,.cgb:active{background:var(--gl);border-color:var(--g);color:var(--g)}
+.cgb-flag{font-size:24px;display:block;margin-bottom:3px}
+.cgb-name{font-size:12px;font-weight:600;display:block}
+.cgb-cur{font-size:11px;color:var(--ts);display:block}
+.lang-opt{display:flex;align-items:center;gap:12px;padding:14px;border:.5px solid var(--border);border-radius:var(--rs);cursor:pointer;font-family:inherit;background:var(--bg);color:var(--t);margin-bottom:8px;width:100%;font-size:15px;font-weight:500;transition:all .15s}
+.lang-opt.on,.lang-opt:active{background:var(--gl);border-color:var(--g);color:var(--g)}
+.lang-flag{font-size:22px}
+
+/* ── SYNC INPUT ── */
+.sync-note{font-size:12px;color:var(--ts);padding:8px 0 10px;line-height:1.5}
 </style>
 </head>
 <body>
 
-<div id="setup-screen" style="display:none">
-  <button id="setup-close-btn" onclick="hideSetup()" style="display:none;position:absolute;top:18px;right:18px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--ts)">✕</button>
-  <div style="font-size:52px;margin-bottom:12px">🌿</div>
-  <h2>Configurar mi tienda</h2>
-  <p>Para que los clientes puedan enviarte pedidos,<br>completá tu número de WhatsApp y el nombre de tu tienda.</p>
-  <div class="setup-box">
-    <label class="flabel">Tu número de WhatsApp (con código de país)</label>
-    <input class="finput" id="s-tel" placeholder="ej. 5491112345678" type="tel">
-    <label class="flabel">Nombre de tu tienda</label>
-    <input class="finput" id="s-nom" placeholder="ej. AmwDigital con María" value="Mi Tienda AmwDigital">
-    <button class="btnp" onclick="generateUrl()">Generar mi link de tienda</button>
-    <div id="url-box" style="display:none">
-      <div class="setup-url" id="url-text"></div>
-      <button class="copy-btn" onclick="copyUrl()">📋 Copiar y compartir</button>
-      <div style="font-size:11px;color:var(--ts);margin-top:8px;text-align:center">Compartí este link con tus clientes por WhatsApp</div>
+<!-- PRESUPUESTO PRINT TEMPLATE -->
+<div id="presupuesto-print"></div>
+
+<!-- ══ APP ══ -->
+<div id="app">
+
+<!-- CATÁLOGO -->
+<div id="v-catalogo" class="view on">
+  <div class="vh">
+    <div class="vh-row">
+      <h1 id="h-catalogo">Catálogo</h1>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button id="eye-btn" onclick="toggleClientMode()" title="Modo Cliente"
+          style="background:none;border:none;cursor:pointer;padding:4px;color:var(--ts);display:flex;align-items:center">
+          <svg id="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg id="eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+        <button onclick="showCountryModal()" id="country-label"
+          style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--ts);font-family:inherit;padding:4px">🇦🇷 AR</button>
+      </div>
+    </div>
+    <div id="client-banner">👤 Modo Cliente activo — solo precios al público</div>
+    <div class="srch">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="Buscar producto o código..." id="srch-input" oninput="renderProducts()">
     </div>
   </div>
+  <div class="pills" id="cat-pills"></div>
+  <div class="pgrid" id="prod-list"></div>
+  <div style="height:4px"></div>
 </div>
 
-<div id="app">
-  <!-- CATÁLOGO -->
-  <div id="v-catalogo" class="view on">
+<!-- CALCULADORA -->
+<div id="v-calc" class="view">
+  <div id="calc-view" style="display:flex;flex-direction:column;height:100%">
     <div class="vh">
       <div class="vh-row">
-        <h1 id="shop-title">🌿 AmwDigital</h1>
-        <div style="display:flex;align-items:center;gap:6px">
-          <button class="link-btn" onclick="installClientApp()" title="Instalar app" style="font-size:20px;padding:4px 6px;color:var(--ts)">📲</button>
-          <button class="link-btn" onclick="goTo('carrito')" style="position:relative;font-size:22px;padding:4px 8px">
-            🛒<span id="cart-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#E24B4A;color:#fff;border-radius:10px;font-size:10px;padding:1px 5px;font-weight:700;min-width:18px;text-align:center">0</span>
+        <h1 id="h-calc">Calculadora</h1>
+        <button class="link-btn" id="clear-btn" onclick="clearCart()" style="color:#E24B4A">Limpiar</button>
+      </div>
+    </div>
+    <div class="ptoggle">
+      <button class="ptb on" id="t-emp" onclick="setPM('emp')">Empresario</button>
+      <button class="ptb" id="t-pub" onclick="setPM('pub')">Público</button>
+      <button class="ptb" id="t-both" onclick="setPM('both')">Ambos</button>
+    </div>
+    <div id="calc-scroll" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px">
+      <div id="cart-list"></div>
+    </div>
+    <div id="tbar" style="display:none;padding:11px 16px;border-top:.5px solid var(--border);background:var(--card);flex-shrink:0">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+        <div>
+          <div style="font-size:11px;color:var(--ts)" id="tlabel">Total empresario</div>
+          <div style="font-size:22px;font-weight:700;color:var(--g)" id="tamount">$0</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="tshare" onclick="shareCart()" style="background:var(--bg);border:.5px solid var(--border);border-radius:var(--rs);padding:10px 14px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.59 13.51 6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+            Lista
+          </button>
+          <button class="tpdf" onclick="askPresupuesto()" style="background:var(--g);color:#fff;border:none;border-radius:var(--rs);padding:10px 14px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Presupuesto
           </button>
         </div>
       </div>
-      <div class="srch">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" placeholder="Buscar producto o código..." id="srch-input" oninput="renderProducts()">
-      </div>
-    </div>
-    <div class="pills" id="cat-pills"></div>
-    <div class="pgrid" id="prod-list"></div>
-    <div style="height:8px"></div>
-  </div>
-
-  <!-- CARRITO -->
-  <div id="v-carrito" class="view">
-    <div class="vh">
-      <div class="vh-row">
-        <h1>Mi Carrito</h1>
-        <button class="link-btn" onclick="clearCart()" style="color:#E24B4A">Vaciar</button>
-      </div>
-    </div>
-    <div id="scroll-cart">
-      <div id="cart-list"></div>
     </div>
   </div>
 </div>
 
-<!-- CART FOOTER -->
-<div id="cart-footer">
-  <div class="cf-totals">
-    <div>
-      <div class="cf-label">Total estimado</div>
-      <div class="cf-amount" id="cf-amount">$0</div>
-    </div>
-  </div>
-  <button id="send-btn" onclick="sendOrder()">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-    Enviar pedido por WhatsApp
-  </button>
+<!-- PEDIDOS -->
+<div id="v-pedidos" class="view">
+  <div class="vh"><h1 id="h-pedidos">Pedidos grupales</h1></div>
+  <div class="olist" id="orders-list"></div>
+  <button class="fab" onclick="newOrder()">+</button>
 </div>
+
+<!-- AJUSTES -->
+<div id="v-ajustes" class="view">
+  <div class="vh"><h1 id="h-ajustes">Ajustes</h1></div>
+  <div id="settings-content"></div>
+</div>
+
+</div><!-- /app -->
 
 <!-- NAV -->
 <nav id="nav">
   <button class="nb on" id="nb-catalogo" onclick="goTo('catalogo')">
     <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-    Catálogo
+    <span id="nav-catalogo">Catálogo</span>
   </button>
-  <button class="nb" id="nb-carrito" onclick="goTo('carrito')" style="position:relative">
-    <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-    <span id="cart-badge-nav" style="display:none;position:absolute;top:2px;right:calc(50% - 22px);background:#E24B4A;color:#fff;border-radius:10px;font-size:10px;padding:1px 5px;min-width:18px;text-align:center;font-weight:700">0</span>
-    Carrito
+  <button class="nb" id="nb-calc" onclick="goTo('calc')" style="position:relative">
+    <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="11" y2="12"/><line x1="14" y1="12" x2="17" y2="12"/><line x1="8" y1="16" x2="11" y2="16"/><line x1="14" y1="16" x2="17" y2="16"/></svg>
+    <span id="cart-badge"></span>
+    <span id="nav-calc">Calc</span>
+  </button>
+  <button class="nb" id="nb-pedidos" onclick="goTo('pedidos')">
+    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <span id="nav-pedidos">Pedidos</span>
+  </button>
+  <button class="nb" id="nb-ajustes" onclick="goTo('ajustes')">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <span id="nav-ajustes">Ajustes</span>
   </button>
 </nav>
 
-<!-- PRODUCT DETAIL -->
+<!-- PRODUCT DETAIL OVERLAY -->
 <div id="pdoverlay" onclick="closePD(event)">
   <div id="pdbox"></div>
 </div>
 
-<!-- MODAL -->
+<!-- MAIN MODAL -->
 <div id="moverlay" onclick="closeModal(event)">
   <div id="mbox"></div>
 </div>
@@ -251,225 +369,466 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 // ═══════════════════════════════════════════
-// CONFIG (from URL hash: ?tel=549...&nombre=Mi+Tienda)
+// LANG
 // ═══════════════════════════════════════════
-function getHashConfig(){
-  const h=(location.hash||'').replace('#','');
-  if(!h) return null;
-  const p=new URLSearchParams(h);
-  const tel=p.get('tel')||'';
-  const nombre=p.get('nombre')||'Mi Tienda AmwDigital';
-  return tel?{tel,nombre}:null;
-}
-// Load config: hash takes priority, then localStorage (for installed PWA reopening)
-const CFG = getHashConfig() || JSON.parse(localStorage.getItem('clientCFG')||'null');
-// Save to localStorage whenever we have a hash — persists across PWA reopens
-if(getHashConfig()) localStorage.setItem('clientCFG', JSON.stringify(CFG));
+const LANG={
+  es:{catalog:'Catálogo',calc:'Calc',orders:'Pedidos',settings:'Ajustes',
+    calculator:'Calculadora',group_orders:'Pedidos grupales',
+    search:'Buscar producto o código...',all:'Todos',
+    client_mode:'Modo Cliente',client_mode_on:'👤 Modo Cliente activo — solo precios al público',
+    emp_price:'Precio empresario',pub_price:'Precio al público',points:'puntos',
+    add_cart:'Agregar al carrito',share:'Compartir',generate_pdf:'Generar PDF',
+    clear:'Limpiar',cancel:'Cancelar',save:'Guardar',
+    country:'País',language:'Idioma',import_excel:'Importar Excel / CSV',
+    restore:'Restaurar precios originales',reset_btn:'Resetear',
+    sync_url:'URL de sincronización de precios',
+    sync_hint:'Pegá la URL publicada de Google Sheets como CSV para sincronizar precios automáticamente.',
+    sync_now:'Sincronizar ahora',syncing:'Sincronizando...',sync_ok:'Precios actualizados ✓',
+    sync_error:'Error al sincronizar',no_sync_url:'Primero configurá una URL de sincronización',
+    save_url:'Guardar URL',last_sync:'Última sincronización',never:'Nunca',
+    no_prods:'No hay productos para este país.\nImportá un Excel con precios locales.',
+    taxes:'Impuestos',about:'Acerca de',price_list:'Lista de precios',
+    version:'Versión',products:'Productos',local_data:'Los datos se guardan localmente en tu dispositivo.',
+    iva_included:'incluido',province_iibb:'Provincia (IIBB)',no_province:'Sin seleccionar',
+    col_hint:'Columnas esperadas: NOMBRE, CODIGO, CATEGORIA, PRECIO_EMP, PRECIO_PUB, PUNTOS',
+    total_emp:'Total empresario',total_pub:'Total público',
+    empty_cart:'Agregá productos desde el Catálogo',
+    empty_orders:'Tocá + para crear tu primer pedido grupal',
+    upload:'↑ Subir',select_province:'Seleccionar provincia',
+  },
+  en:{catalog:'Catalog',calc:'Calc',orders:'Orders',settings:'Settings',
+    calculator:'Calculator',group_orders:'Group Orders',
+    search:'Search product or code...',all:'All',
+    client_mode:'Client Mode',client_mode_on:'👤 Client Mode active — public prices only',
+    emp_price:'Distributor price',pub_price:'Retail price',points:'pts',
+    add_cart:'Add to cart',share:'Share',generate_pdf:'Generate PDF',
+    clear:'Clear',cancel:'Cancel',save:'Save',
+    country:'Country',language:'Language',import_excel:'Import Excel / CSV',
+    restore:'Restore original prices',reset_btn:'Reset',
+    sync_url:'Price sync URL',
+    sync_hint:'Paste a public Google Sheets CSV URL to sync prices automatically.',
+    sync_now:'Sync now',syncing:'Syncing...',sync_ok:'Prices updated ✓',
+    sync_error:'Sync error',no_sync_url:'Set a sync URL first',
+    save_url:'Save URL',last_sync:'Last sync',never:'Never',
+    no_prods:'No products for this country.\nImport an Excel with local prices.',
+    taxes:'Taxes',about:'About',price_list:'Price list',
+    version:'Version',products:'Products',local_data:'Data is stored locally on your device.',
+    iva_included:'included',province_iibb:'Province (IIBB)',no_province:'Not selected',
+    col_hint:'Expected columns: NAME, CODE, CATEGORY, DIST_PRICE, RETAIL_PRICE, POINTS',
+    total_emp:'Distributor total',total_pub:'Retail total',
+    empty_cart:'Add products from the Catalog',
+    empty_orders:'Tap + to create your first group order',
+    upload:'↑ Upload',select_province:'Select province',
+  },
+  pt:{catalog:'Catálogo',calc:'Calc',orders:'Pedidos',settings:'Configurações',
+    calculator:'Calculadora',group_orders:'Pedidos grupais',
+    search:'Buscar produto ou código...',all:'Todos',
+    client_mode:'Modo Cliente',client_mode_on:'👤 Modo Cliente ativo — só preços ao público',
+    emp_price:'Preço distribuidor',pub_price:'Preço ao público',points:'pts',
+    add_cart:'Adicionar ao carrinho',share:'Compartilhar',generate_pdf:'Gerar PDF',
+    clear:'Limpar',cancel:'Cancelar',save:'Salvar',
+    country:'País',language:'Idioma',import_excel:'Importar Excel / CSV',
+    restore:'Restaurar preços originais',reset_btn:'Resetar',
+    sync_url:'URL de sincronização de preços',
+    sync_hint:'Cole a URL pública do Google Sheets como CSV para sincronizar preços.',
+    sync_now:'Sincronizar agora',syncing:'Sincronizando...',sync_ok:'Preços atualizados ✓',
+    sync_error:'Erro ao sincronizar',no_sync_url:'Configure uma URL de sincronização primeiro',
+    save_url:'Salvar URL',last_sync:'Última sincronização',never:'Nunca',
+    no_prods:'Sem produtos para este país.\nImporte um Excel com preços locais.',
+    taxes:'Impostos',about:'Sobre',price_list:'Lista de preços',
+    version:'Versão',products:'Produtos',local_data:'Os dados são salvos localmente no dispositivo.',
+    iva_included:'incluído',province_iibb:'Província (IIBB)',no_province:'Não selecionado',
+    col_hint:'Colunas esperadas: NOME, CODIGO, CATEGORIA, PRECO_DIST, PRECO_PUB, PONTOS',
+    total_emp:'Total distribuidor',total_pub:'Total ao público',
+    empty_cart:'Adicione produtos do Catálogo',
+    empty_orders:'Toque em + para criar seu primeiro pedido grupal',
+    upload:'↑ Enviar',select_province:'Selecionar província',
+  }
+};
+
+// ═══════════════════════════════════════════
+// COUNTRIES
+// ═══════════════════════════════════════════
+const AMWAY_SHEET_ID = '1EiMWr8BYAscQjfzg-sQ4l9448hbLel7S0Roxf28-lYY';
+const COUNTRIES={
+  AR:{name:'Argentina',    flag:'🇦🇷', symbol:'$',  iva:21, locale:'es-AR', sheet:'Precios_AR'},
+  MX:{name:'México',       flag:'🇲🇽', symbol:'$',  iva:16, locale:'es-MX', sheet:'Precios_MX'},
+  CO:{name:'Colombia',     flag:'🇨🇴', symbol:'$',  iva:19, locale:'es-CO', sheet:'Precios_CO'},
+  CL:{name:'Chile',        flag:'🇨🇱', symbol:'$',  iva:19, locale:'es-CL', sheet:'Precios_CL'},
+  UY:{name:'Uruguay',      flag:'🇺🇾', symbol:'$U', iva:22, locale:'es-UY', sheet:'Precios_UY'},
+  GT:{name:'Guatemala',    flag:'🇬🇹', symbol:'Q',  iva:12, locale:'es-GT', sheet:'Precios_GT'},
+  SV:{name:'El Salvador',  flag:'🇸🇻', symbol:'$',  iva:13, locale:'es-SV', sheet:'Precios_SV'},
+  HN:{name:'Honduras',     flag:'🇭🇳', symbol:'L',  iva:15, locale:'es-HN', sheet:'Precios_HN'},
+  PA:{name:'Panamá',       flag:'🇵🇦', symbol:'B/', iva:7,  locale:'es-PA', sheet:'Precios_PA'},
+  CR:{name:'Costa Rica',   flag:'🇨🇷', symbol:'₡',  iva:13, locale:'es-CR', sheet:'Precios_CR'},
+  PE:{name:'Perú',         flag:'🇵🇪', symbol:'S/', iva:18, locale:'es-PE'},
+  EC:{name:'Ecuador',      flag:'🇪🇨', symbol:'$',  iva:12, locale:'es-EC'},
+  BR:{name:'Brasil',       flag:'🇧🇷', symbol:'R$', iva:12, locale:'pt-BR'},
+};
 
 // ═══════════════════════════════════════════
 // DATA
 // ═══════════════════════════════════════════
-const CAT_ICON={'Nutrición':'🌿','Belleza':'✨','Cuidado Personal':'🧴','Hogar':'🏠'};
-const catIcon=cat=>CAT_ICON[cat]||'📦';
-const fmt=n=>'$'+Math.round(n).toLocaleString('es-AR');
-const imgUrl=cod=>`https://www.amway.com.ar/img_pict/380_Catalog/Products/large/380_${cod}.jpg`;
+const CAT_ICON = {'Nutrición':'🌿','Belleza':'✨','Cuidado Personal':'🧴','Hogar':'🏠'};
 
-const SYNC_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6hT4SJxlkUtxUoqkhFqiAahgB5zME7g7LGjXTyOaZFT1luygOYtAfd1I-UC9dJccTDMNK15miYe03/pub?gid=1781130644&single=true&output=csv';
-const SYNC_LS_KEY  = 'clientProds_v2';
-const SYNC_TS_KEY  = 'clientProdTs_v2';
+const DEFAULT_PRODS = [
+  // ── NUTRICIÓN ──
+  {id:'120843',n:'Double X Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'120843',emp:88105.50,pub:117474,pts:29.24,
+   desc:'Multivitamínico, multimineral y fitoquímico avanzado. 12 vitaminas, 10 minerales y concentrado de 22 plantas. Cobertura nutricional completa para tu bienestar diario.'},
+  {id:'110178',n:'B Plus Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'110178',emp:18315.75,pub:24421,pts:6.08,
+   desc:'Complejo de 8 vitaminas del grupo B para apoyar el metabolismo energético y la función del sistema nervioso.'},
+  {id:'109741',n:'C Plus Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'109741',emp:18698.25,pub:24931,pts:6.21,
+   desc:'Vitamina C con bioflavonoides de acerola para un sistema inmunológico fuerte y protección antioxidante superior.'},
+  {id:'102736',n:'Fibra en Polvo Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'102736',emp:38997.75,pub:51997,pts:12.94,
+   desc:'Fibra dietaria soluble e insoluble de origen vegetal para apoyar la digestión y el tránsito intestinal saludable.'},
+  {id:'100054',n:'CLA 500 Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'100054',emp:45809.25,pub:61079,pts:15.20,
+   desc:'Ácido Linoleico Conjugado de aceite de cártamo natural con certificación orgánica. Apoya el metabolismo saludable.'},
+  {id:'110415',n:'Proteína Vegetal Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'110415',emp:45591.75,pub:60789,pts:15.13,
+   desc:'Proteína de alta calidad de origen vegetal (soya, trigo y amaranto). Ideal para recuperación muscular y nutrición balanceada.'},
+  {id:'110609',n:'Cal Mag D Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'110609',emp:20084.25,pub:26779,pts:6.67,
+   desc:'Calcio, magnesio y vitamina D en fórmula sinérgica. Para huesos y dientes fuertes y función muscular óptima.'},
+  {id:'106678',n:'HSN Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'106678',emp:20012.25,pub:26683,pts:6.64,
+   desc:'Biotina, zinc y selenio para el cuidado del cabello, la piel y las uñas desde adentro hacia afuera.'},
+  {id:'109536',n:'Multicaroteno Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'109536',emp:30252.75,pub:40337,pts:10.04,
+   desc:'Complejo de carotenoides naturales con beta-caroteno, licopeno y luteína para protección antioxidante y salud visual.'},
+  {id:'126130',n:'Triple Omega-3 Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'126130',emp:48561.75,pub:64749,pts:16.12,
+   desc:'Ácidos grasos omega 3, 6 y 9 de alta pureza y concentración. Apoya la salud cardiovascular y la función cerebral.'},
+  {id:'120571',n:'Probiotic Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'120571',emp:57888.75,pub:77185,pts:19.21,
+   desc:'2 mil millones de microorganismos beneficiosos por cápsula para el equilibrio de la flora intestinal y la salud digestiva.'},
+  {id:'123043',n:'Kids Daily Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'123043',emp:21725.25,pub:28967,pts:7.21,
+   desc:'Vitaminas y minerales esenciales en formato masticable especialmente formulado para el crecimiento sano de niños.'},
+  {id:'126009',n:'Daily Plus Nutrilite™ 45 Tab.',cat:'Nutrición',sub:'Nutrilite',cod:'126009',emp:21725.25,pub:28967,pts:7.21,
+   desc:'22 vitaminas y minerales esenciales con exclusivo jugo de acerola deshidratada, zanahoria morada y bayas de sauco. Una tableta al día.'},
+  {id:'126010',n:'Daily Plus Nutrilite™ 90 Tab.',cat:'Nutrición',sub:'Nutrilite',cod:'126010',emp:42300,pub:56400,pts:14.04,
+   desc:'Presentación económica de 90 tabletas. 22 vitaminas y minerales esenciales para 3 meses de bienestar diario.'},
+  {id:'102046',n:'Tri Iron Folic Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'102046',emp:22119,pub:29492,pts:7.34,
+   desc:'Hierro + ácido fólico + vitamina C formulados para máxima absorción. Previene la anemia y apoya la salud femenina.'},
+  {id:'122174',n:'Lecitina E Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'122174',emp:22708.50,pub:30278,pts:7.54,
+   desc:'Lecitina de soya con vitamina E para la salud del sistema nervioso, función cognitiva y salud cardiovascular.'},
+  {id:'124321',n:'Multi-Carotene Spectrum',cat:'Nutrición',sub:'Nutrilite',cod:'124321',emp:34725,pub:46300,pts:11.52,
+   desc:'Espectro completo de carotenoides de plantas para protección antioxidante avanzada. Incluye beta-caroteno natural.'},
+  {id:'118891',n:'Phytopowder™ Naranja',cat:'Nutrición',sub:'Nutrilite',cod:'118891',emp:47316.75,pub:63089,pts:15.70,
+   desc:'Bebida en polvo con fitoquímicos naturales de frutas y vegetales. Sabor naranja refrescante para potenciar tu día.'},
+  {id:'118893',n:'Phytopowder™ Cereza',cat:'Nutrición',sub:'Nutrilite',cod:'118893',emp:47316.75,pub:63089,pts:15.70,
+   desc:'Bebida en polvo con fitoquímicos naturales de frutas y vegetales. Sabor cereza para potenciar tu día.'},
+  {id:'315249',n:'Nutrilite™ Collagen + C',cat:'Nutrición',sub:'Nutrilite',cod:'315249',emp:56250,pub:75000,pts:18.67,
+   desc:'Colágeno hidrolizado tipo I, II y III con vitamina C para la salud de la piel, articulaciones y tejidos conectivos.'},
+  {id:'286169',n:'Bodykey™ Herbal Mix Tea',cat:'Nutrición',sub:'BodyKey',cod:'286169',emp:24920.25,pub:33227,pts:8.27,
+   desc:'Infusión herbal con ingredientes naturales seleccionados para acompañar tu plan de control de peso de forma saludable.'},
+  {id:'127004',n:'XS Cranberry Grape (12 u.)',cat:'Nutrición',sub:'XS',cod:'127004',emp:31767,pub:42356,pts:5.27,
+   desc:'Pack 12 bebidas energizantes sin azúcar con vitaminas del grupo B. Sabor cranberry y uva. Sin colorantes artificiales.'},
+  // ── BELLEZA ──
+  {id:'126740',n:'Máscara + Sérum Pestañas',cat:'Belleza',sub:'Artistry',cod:'126740',emp:36210,pub:48280,pts:11.42,
+   desc:'Dúo intensificador de pestañas resistente al agua. El sérum nutre y fortalece mientras la máscara define y alarga.'},
+  {id:'126744',n:'Delineador de Ojos Waterproof',cat:'Belleza',sub:'Artistry',cod:'126744',emp:30272.25,pub:40363,pts:9.54,
+   desc:'Delineador de larga duración resistente al agua y al sudor. Trazo preciso y color intenso que dura todo el día.'},
+  {id:'126747',n:'Brow Pencil & Gel de Cejas',cat:'Belleza',sub:'Artistry',cod:'126747',emp:30272.25,pub:40363,pts:9.54,
+   desc:'Define y da forma a las cejas con el lápiz y fijalas con el gel. Acabado natural de larga duración.'},
+  {id:'124144',n:'Lipstick Crema Saturday Peach',cat:'Belleza',sub:'Artistry',cod:'124144',emp:25519.50,pub:34026,pts:8.05,
+   desc:'Labial cremoso de larga duración con acabado satinado e hidratación de aceite de argán.'},
+  {id:'124146',n:'Lipstick Crema Mauvelous Morning',cat:'Belleza',sub:'Artistry',cod:'124146',emp:25519.50,pub:34026,pts:8.05,
+   desc:'Labial cremoso de larga duración con acabado satinado. Hidratación y color vibrante en un solo paso.'},
+  {id:'124149',n:'Lipstick Crema Secret Crush Scarlet',cat:'Belleza',sub:'Artistry',cod:'124149',emp:25519.50,pub:34026,pts:8.05,
+   desc:'Labial cremoso en rojo intenso con acabado satinado. Hidratación y color que dura todo el día.'},
+  {id:'124155',n:'Lipstick Matte Lunch Date Pink',cat:'Belleza',sub:'Artistry',cod:'124155',emp:25519.50,pub:34026,pts:8.05,
+   desc:'Labial mate con textura suave y confortable. Sin sensación de resequedad. Pigmentación intensa.'},
+  {id:'124158',n:'Lipstick Matte Road Trip Red',cat:'Belleza',sub:'Artistry',cod:'124158',emp:25519.50,pub:34026,pts:8.05,
+   desc:'Labial mate icónico en rojo intenso. Formulación suave y altamente pigmentada de larga duración.'},
+  {id:'124823',n:'Multi-Defense UV 50 Protect',cat:'Belleza',sub:'Artistry',cod:'124823',emp:54372.75,pub:72497,pts:17.14,
+   desc:'Protector solar facial SPF 50+ con hidratación y antioxidantes. Protege contra rayos UV, polución y luz azul.'},
+  {id:'125517',n:'Sérum Vitamina C + HA3',cat:'Belleza',sub:'Artistry',cod:'125517',emp:50489.25,pub:67319,pts:15.92,
+   desc:'Triple ácido hialurónico + vitamina C para una piel radiante, hidratada y luminosa desde la primera aplicación.'},
+  {id:'125575',n:'Mascarilla para Dormir',cat:'Belleza',sub:'Artistry',cod:'125575',emp:63263.25,pub:84351,pts:19.95,
+   desc:'Tratamiento nocturno con poli-glucurónicos y péptidos. Hidrata y revitaliza la piel mientras dormís.'},
+  {id:'123798',n:'Crema Hidratante Skin Nutrition',cat:'Belleza',sub:'Artistry',cod:'123798',emp:67592.25,pub:90123,pts:21.31,
+   desc:'Nutrición profunda con 9 ingredientes botánicos activos. Para una piel suave, nutrida y rejuvenecida.'},
+  {id:'123785',n:'Crema Reactivación Renovadora',cat:'Belleza',sub:'Artistry',cod:'123785',emp:83517,pub:111356,pts:26.33,
+   desc:'Crema anti-edad con tecnología de reactivación celular. Reduce líneas de expresión y mejora la firmeza.'},
+  {id:'123791',n:'Agua Micelar Desmaquillante',cat:'Belleza',sub:'Artistry',cod:'123791',emp:41292,pub:55056,pts:13.02,
+   desc:'Limpieza suave y eficaz 3 en 1. Elimina el maquillaje, limpia e hidrata sin resecar la piel.'},
+  // ── CUIDADO PERSONAL — G&H ──
+  {id:'125902',n:'Crema para Manos G&H',cat:'Cuidado Personal',sub:'G&H',cod:'125902',emp:12574.50,pub:16766,pts:3.96,
+   desc:'Crema nutritiva de rápida absorción con extractos de girasol y semilla de algodón. Manos suaves todo el día.'},
+  {id:'125893',n:'Loción Corporal G&H',cat:'Cuidado Personal',sub:'G&H',cod:'125893',emp:27406.50,pub:36542,pts:8.64,
+   desc:'Hidratación profunda y duradera con manteca de karité y vitamina E. Piel suave, nutrida y con fragancia sutil.'},
+  {id:'125894',n:'Jabón Líquido Manos G&H',cat:'Cuidado Personal',sub:'G&H',cod:'125894',emp:16306.50,pub:21742,pts:5.14,
+   desc:'Limpieza suave con agentes hidratantes naturales. Elimina gérmenes sin resecar. Fragancia suave y agradable.'},
+  {id:'125892',n:'Gel de Baño Exfoliante G&H',cat:'Cuidado Personal',sub:'G&H',cod:'125892',emp:23403,pub:31204,pts:7.38,
+   desc:'Exfoliante corporal con microperlas naturales que elimina células muertas y suaviza la piel. Fragancia floral.'},
+  {id:'125913',n:'Barra de Jabón Nutritiva G&H',cat:'Cuidado Personal',sub:'G&H',cod:'125913',emp:13551,pub:18068,pts:4.27,
+   desc:'Jabón en barra con extractos botánicos nutritivos. Limpia suavemente dejando la piel hidratada y suave.'},
+  {id:'125896',n:'Desodorante Roll-On G&H',cat:'Cuidado Personal',sub:'G&H',cod:'125896',emp:7267.50,pub:9690,pts:2.29,
+   desc:'Antitranspirante y desodorante eficaz con protección de 24 horas. Sin alcohol, suave para piel sensible.'},
+  {id:'305275',n:'Protector Solar G&H SPF 30',cat:'Cuidado Personal',sub:'G&H',cod:'305275',emp:36336.75,pub:48449,pts:12.06,
+   desc:'Protector solar corporal SPF 30+ resistente al agua. Protección amplia y liviana para toda la familia.'},
+  {id:'126308',n:'G&H Baby Gel de Baño y Shampoo',cat:'Cuidado Personal',sub:'G&H Baby',cod:'126308',emp:16278.75,pub:21705,pts:5.13,
+   desc:'Fórmula suave 2 en 1 sin lágrimas para bebés. Dermatológicamente probado para la piel más delicada.'},
+  {id:'126309',n:'G&H Baby Loción Corporal',cat:'Cuidado Personal',sub:'G&H Baby',cod:'126309',emp:16278.75,pub:21705,pts:5.13,
+   desc:'Hidratación suave para la piel del bebé con manteca de karité. Hipoalergénica y dermatológicamente probada.'},
+  // ── ERTIA ──
+  {id:'254101',n:'Crema para Manos Ertia',cat:'Cuidado Personal',sub:'Ertia',cod:'254101',emp:13117.50,pub:17490,pts:4.35,
+   desc:'Crema hidratante con extractos naturales para manos sensibles o expuestas. Absorción rápida y no grasosa.'},
+  {id:'254102',n:'Crema para Pies Ertia',cat:'Cuidado Personal',sub:'Ertia',cod:'254102',emp:17792.25,pub:23723,pts:5.90,
+   desc:'Tratamiento intensivo para pies cansados y resecos. Hidratación profunda con urea y extractos de plantas.'},
+  // ── GLISTER ──
+  {id:'124106',n:'Pasta Dental Glister 200g',cat:'Cuidado Personal',sub:'Glister',cod:'124106',emp:9042.75,pub:12057,pts:2.85,
+   desc:'Multiacción con fluoruro y extracto de plantas. Blanquea, fortalece el esmalte y previene la caries.'},
+  {id:'124107',n:'Pasta Dental Glister 50g',cat:'Cuidado Personal',sub:'Glister',cod:'124107',emp:3552.75,pub:4737,pts:1.12,
+   desc:'Pasta dental Glister Multiacción en presentación compacta de viaje. Protección completa en cualquier lugar.'},
+  {id:'124108',n:'Enjuague Bucal Glister',cat:'Cuidado Personal',sub:'Glister',cod:'124108',emp:17692.50,pub:23590,pts:5.58,
+   desc:'Enjuague antibacterial que elimina el 99.9% de bacterias. Frescura prolongada sin alcohol.'},
+  {id:'124109',n:'Cepillo Dental Glister',cat:'Cuidado Personal',sub:'Glister',cod:'124109',emp:18147.75,pub:24197,pts:5.72,
+   desc:'Cerdas suaves de microfibra para limpieza profunda y suave. Mango ergonómico con cabezal compacto.'},
+  {id:'124111',n:'Spray Bucal Glister',cat:'Cuidado Personal',sub:'Glister',cod:'124111',emp:7931.25,pub:10575,pts:2.50,
+   desc:'Refresca el aliento al instante. Práctico, sin alcohol y de bolsillo. Ideal para cualquier momento.'},
+  {id:'124112',n:'Hilo Dental Glister',cat:'Cuidado Personal',sub:'Glister',cod:'124112',emp:8301,pub:11068,pts:2.62,
+   desc:'Hilo dental encerado con fluoruro. Limpia los espacios entre dientes con facilidad y deslizamiento suave.'},
+  {id:'342021',n:'Pack 12× Pasta Dental 200g',cat:'Cuidado Personal',sub:'Glister',cod:'342021',emp:99470.25,pub:132627,pts:31.36,
+   desc:'Pack económico de 12 tubos Glister Multiacción 200g. Ideal para stock familiar o regalo.'},
+  {id:'342022',n:'Pack 6× Pasta Dental 200g',cat:'Cuidado Personal',sub:'Glister',cod:'342022',emp:54256.50,pub:72342,pts:17.11,
+   desc:'Pack de 6 tubos Glister Multiacción 200g. Ahorrá y siempre tenés stock en casa.'},
+  // ── SATINIQUE ──
+  {id:'126449',n:'Shampoo Hidratación Satinique',cat:'Cuidado Personal',sub:'Satinique',cod:'126449',emp:16729.50,pub:22306,pts:5.27,
+   desc:'Tecnología amino-gel que hidrata y suaviza el cabello desde la primera lavada. Para todo tipo de cabello.'},
+  {id:'126451',n:'Acondicionador Hidratación Satinique',cat:'Cuidado Personal',sub:'Satinique',cod:'126451',emp:16729.50,pub:22306,pts:5.27,
+   desc:'Desenreda y suaviza con tecnología amino-gel. Brillo y manejabilidad desde el primer uso.'},
+  {id:'126452',n:'Shampoo Reparador Satinique',cat:'Cuidado Personal',sub:'Satinique',cod:'126452',emp:16729.50,pub:22306,pts:5.27,
+   desc:'Tratamiento intensivo para cabello dañado o con puntas abiertas. Restaura la fibra capilar y devuelve el brillo.'},
+  {id:'126454',n:'Acondicionador Reparador Satinique',cat:'Cuidado Personal',sub:'Satinique',cod:'126454',emp:16729.50,pub:22306,pts:5.27,
+   desc:'Reconstructor para cabello dañado. Sella las puntas y restaura el brillo y la suavidad perdidos.'},
+  {id:'126457',n:'Shampoo Anticaída Satinique',cat:'Cuidado Personal',sub:'Satinique',cod:'126457',emp:16729.50,pub:22306,pts:5.27,
+   desc:'Con cafeína y biotina para fortalecer el cabello desde la raíz y reducir visiblemente la caída.'},
+  {id:'126463',n:'Shampoo Anticaspa Satinique',cat:'Cuidado Personal',sub:'Satinique',cod:'126463',emp:16729.50,pub:22306,pts:5.27,
+   desc:'Con piritionato de zinc que elimina la caspa eficazmente y previene su reaparición. Cuero cabelludo sano.'},
+  {id:'126465',n:'Tratamiento Reparador Satinique',cat:'Cuidado Personal',sub:'Satinique',cod:'126465',emp:27900,pub:37200,pts:8.80,
+   desc:'Mascarilla intensiva para cabello muy dañado o con tratamientos químicos. Reconstruye y fortalece desde adentro.'},
+  // ── HOGAR ──
+  {id:'110488',n:'Dish Drops Lavaplatos Concentrado',cat:'Hogar',sub:'Amway Home',cod:'110488',emp:24987.75,pub:33317,pts:3.94,
+   desc:'Lavavajillas biodegradable ultra concentrado. Una gota lava varios platos. Eficaz en grasa y seguro para manos.'},
+  {id:'110403',n:'SA8 Aerosol Quitamanchas',cat:'Hogar',sub:'Amway Home',cod:'110403',emp:23027.25,pub:30703,pts:3.63,
+   desc:'Eliminador de manchas en aerosol con acción en segundos. Actúa sobre manchas difíciles sin dañar las fibras.'},
+  {id:'124485',n:'SA8 Blanqueador Telas 1 Kg',cat:'Hogar',sub:'Amway Home',cod:'124485',emp:26474.25,pub:35299,pts:4.17,
+   desc:'Blanqueador sin cloro seguro para colores y blancos. Ecológico y efectivo para manchas difíciles.'},
+  {id:'109849',n:'SA8 Detergente en Polvo 3 Kg',cat:'Hogar',sub:'Amway Home',cod:'109849',emp:53967,pub:71956,pts:8.51,
+   desc:'Ultra concentrado para hasta 90 lavados. Máxima limpieza con mínima cantidad en agua fría o caliente.'},
+  {id:'112532',n:'SA8 Detergente Líquido 1 L',cat:'Hogar',sub:'Amway Home',cod:'112532',emp:34988.25,pub:46651,pts:5.52,
+   desc:'Detergente líquido concentrado biodegradable. Alta eficacia en ropa oscura y delicada. Ideal para lavado a mano.'},
+  {id:'110480',n:'SA8 Suavizante Concentrado 1 L',cat:'Hogar',sub:'Amway Home',cod:'110480',emp:23490,pub:31320,pts:3.70,
+   desc:'Suavizante concentrado de larga fragancia. Suaviza las fibras y reduce la electricidad estática.'},
+  {id:'E0001',n:'L.O.C. Limpiador Multiusos',cat:'Hogar',sub:'Amway Home',cod:'E0001',emp:22557,pub:30076,pts:3.56,
+   desc:'Limpiador concentrado multiusos biodegradable. Una botella reemplaza múltiples productos de limpieza del hogar.'},
+  {id:'E3878',n:'Pursue Limpiador Desinfectante',cat:'Hogar',sub:'Amway Home',cod:'E3878',emp:25079.25,pub:33439,pts:3.95,
+   desc:'Desinfectante de superficies que elimina el 99.9% de bacterias. Sin residuos tóxicos, seguro para toda la familia.'},
+];
 
-function loadGviz(sheetId,gid){
+const PROVINCIAS = [
+  {n:'CABA',iibb:6.0},{n:'Buenos Aires (provincia)',iibb:3.0},{n:'Córdoba',iibb:3.0},
+  {n:'Santa Fe',iibb:3.5},{n:'Mendoza',iibb:3.0},{n:'Tucumán',iibb:3.5},
+  {n:'Salta',iibb:3.0},{n:'Entre Ríos',iibb:3.5},{n:'Chaco',iibb:3.5},
+  {n:'Otras provincias',iibb:3.0},
+];
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let lang       = localStorage.getItem('lang')       || 'es';
+let country    = localStorage.getItem('country')    || 'AR';
+let clientMode = localStorage.getItem('clientMode') === 'true';
+let prods = loadProds();
+let cart  = JSON.parse(localStorage.getItem('cart')   || '[]');
+let ords  = JSON.parse(localStorage.getItem('orders') || '[]');
+let prov  = JSON.parse(localStorage.getItem('prov')   || 'null');
+let pm    = 'emp';
+let activeCat = 'Todos';
+let nos   = {step:1,nombre:'',compradores:[],envio:0,items:[],editId:null};
+
+function loadProds(){
+  try{
+    const s=localStorage.getItem('prods_'+country);
+    if(s) return JSON.parse(s);
+    return country==='AR'?DEFAULT_PRODS:[];
+  }catch{return country==='AR'?DEFAULT_PRODS:[];}
+}
+const saveProds = () => localStorage.setItem('prods_'+country, JSON.stringify(prods));
+const saveCart  = () => localStorage.setItem('cart',  JSON.stringify(cart));
+const saveOrds  = () => localStorage.setItem('orders',JSON.stringify(ords));
+const saveProv  = () => localStorage.setItem('prov',  JSON.stringify(prov));
+
+// ═══════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════
+const T     = key => (LANG[lang]?.[key]) ?? (LANG.es?.[key]) ?? key;
+const fmt   = n => (COUNTRIES[country]?.symbol||'$')+Math.round(n).toLocaleString(COUNTRIES[country]?.locale||'es-AR');
+const uid   = () => Date.now().toString(36)+Math.random().toString(36).slice(2);
+const getP  = id => prods.find(p=>p.id===id);
+const imgUrl = cod => `https://www.amway.com.ar/img_pict/380_Catalog/Products/large/380_${cod}.jpg`;
+const catIcon = cat => CAT_ICON[cat] || '📦';
+
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('on');
+  clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('on'),2200);
+}
+
+// ═══════════════════════════════════════════
+// LANG APPLICATION
+// ═══════════════════════════════════════════
+function applyLang(){
+  document.documentElement.lang=lang==='pt'?'pt-BR':lang;
+  const ids={
+    'nav-catalogo':T('catalog'),'nav-calc':T('calc'),
+    'nav-pedidos':T('orders'),'nav-ajustes':T('settings'),
+    'h-catalogo':T('catalog'),'h-calc':T('calculator'),
+    'h-pedidos':T('group_orders'),'h-ajustes':T('settings'),
+    'clear-btn':T('clear'),
+    'client-banner':T('client_mode_on'),
+  };
+  Object.entries(ids).forEach(([id,txt])=>{const el=document.getElementById(id);if(el)el.textContent=txt;});
+  const si=document.getElementById('srch-input');if(si)si.placeholder=T('search');
+  updateClientModeUI();
+  updateCountryUI();
+  initCats();
+  renderProducts();
+  if(document.getElementById('v-ajustes').classList.contains('on'))renderSettings();
+}
+
+// ═══════════════════════════════════════════
+// CLIENT MODE
+// ═══════════════════════════════════════════
+function toggleClientMode(){
+  clientMode=!clientMode;
+  localStorage.setItem('clientMode',clientMode);
+  updateClientModeUI();
+  renderProducts();
+  if(document.getElementById('v-calc').classList.contains('on'))renderCart();
+}
+function updateClientModeUI(){
+  const banner=document.getElementById('client-banner');
+  const eyeOpen=document.getElementById('eye-open');
+  const eyeClosed=document.getElementById('eye-closed');
+  const eyeBtn=document.getElementById('eye-btn');
+  if(banner){banner.classList.toggle('on',clientMode);if(clientMode)banner.textContent=T('client_mode_on');}
+  if(eyeOpen)eyeOpen.style.display=clientMode?'none':'block';
+  if(eyeClosed)eyeClosed.style.display=clientMode?'block':'none';
+  if(eyeBtn)eyeBtn.style.color=clientMode?'var(--g)':'var(--ts)';
+}
+
+// ═══════════════════════════════════════════
+// COUNTRY
+// ═══════════════════════════════════════════
+function showCountryModal(){
+  document.getElementById('mbox').innerHTML=`
+    <div class="mtitle" style="margin-bottom:14px">${T('country')}</div>
+    <div class="cg">
+      ${Object.entries(COUNTRIES).map(([code,c])=>`
+        <button class="cgb${country===code?' on':''}" onclick="setCountry('${code}')">
+          <span class="cgb-flag">${c.flag}</span>
+          <span class="cgb-name">${c.name}</span>
+          <span class="cgb-cur">${c.symbol} · IVA ${c.iva}%</span>
+        </button>`).join('')}
+    </div>
+    <button class="btns" onclick="closeModal()">${T('cancel')}</button>`;
+  openModal();
+}
+function setCountry(code){
+  country=code;
+  localStorage.setItem('country',country);
+  prods=loadProds();
+  closeModal();
+  updateCountryUI();
+  initCats();
+  renderProducts();
+  toast('✓ '+COUNTRIES[code].name);
+}
+function updateCountryUI(){
+  const el=document.getElementById('country-label');
+  if(el)el.textContent=COUNTRIES[country].flag+' '+country;
+}
+
+// ═══════════════════════════════════════════
+// LANGUAGE
+// ═══════════════════════════════════════════
+function showLangModal(){
+  const opts=[['es','🇦🇷','Español'],['en','🇺🇸','English'],['pt','🇧🇷','Português']];
+  document.getElementById('mbox').innerHTML=`
+    <div class="mtitle" style="margin-bottom:14px">${T('language')}</div>
+    ${opts.map(([l,flag,name])=>`
+      <button class="lang-opt${lang===l?' on':''}" onclick="setLang('${l}')">
+        <span class="lang-flag">${flag}</span>
+        <span>${name}</span>
+      </button>`).join('')}
+    <button class="btns" style="margin-top:4px" onclick="closeModal()">${T('cancel')}</button>`;
+  openModal();
+}
+function setLang(l){
+  lang=l;
+  localStorage.setItem('lang',lang);
+  closeModal();
+  applyLang();
+}
+
+// ═══════════════════════════════════════════
+// PRICE SYNC
+// ═══════════════════════════════════════════
+function showSyncModal(){
+  const cur=localStorage.getItem('syncUrl_'+country)||'';
+  document.getElementById('mbox').innerHTML=`
+    <div class="mtitle">${T('sync_url')}</div>
+    <div class="sync-note">${T('sync_hint')}</div>
+    <input class="finput" id="sync-url-inp" placeholder="https://docs.google.com/..." value="${cur}">
+    <button class="btnp" onclick="saveSyncUrl()">${T('save_url')}</button>
+    <button class="btns" onclick="closeModal()" style="margin-top:8px">${T('cancel')}</button>`;
+  openModal();
+}
+function saveSyncUrl(){
+  const url=(document.getElementById('sync-url-inp').value||'').trim();
+  localStorage.setItem('syncUrl_'+country,url);
+  closeModal();
+  toast(T('save')+' ✓');
+  if(url)syncPrices();
+}
+function loadGviz(sheetId, sheetName){
   return new Promise((resolve,reject)=>{
     const cb='_gv'+Date.now();
     const s=document.createElement('script');
     const t=setTimeout(()=>{s.remove();delete window[cb];reject(new Error('timeout'));},15000);
     window[cb]=(r)=>{clearTimeout(t);s.remove();delete window[cb];r.status==='ok'?resolve(r.table):reject(new Error(r.status||'err'));};
     s.onerror=()=>{clearTimeout(t);s.remove();delete window[cb];reject(new Error('net'));};
-    s.src=`https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json;responseHandler:${cb}&gid=${gid}`;
+    s.src=`https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json;responseHandler:${cb}&sheet=${encodeURIComponent(sheetName)}`;
     document.head.appendChild(s);
   });
 }
 
-function parseCSV(txt){
-  const rows=[];let row=[],field='',inQ=false;
-  for(let i=0;i<txt.length;i++){
-    const c=txt[i],n=txt[i+1];
-    if(inQ){if(c==='"'&&n==='"'){field+='"';i++;}else if(c==='"'){inQ=false;}else field+=c;}
-    else if(c==='"'){inQ=true;}
-    else if(c===','){row.push(field.trim());field='';}
-    else if(c==='\n'||c==='\r'){if(c==='\r'&&n==='\n')i++;if(row.length||field){row.push(field.trim());rows.push(row);row=[];field='';}}
-    else field+=c;
-  }
-  if(field||row.length){row.push(field.trim());rows.push(row);}
-  return rows;
-}
-
-function prodsFromGvizTable(table){
-  const cols=table.cols.map(c=>c.label.toLowerCase());
-  const fi=pats=>cols.findIndex(c=>pats.some(p=>c.includes(p)));
-  const pk=fi(['pub','suger','retail','venta']),ptk=fi(['punto','pts','point']);
-  const ck=fi(['codigo','code','cod']),nk=fi(['nombre','name','producto']),catk=fi(['categ','cat']);
-  const gv=(r,k)=>k>=0?String(r.c[k]?.v??''):'';
-  const num=v=>parseFloat(String(v).replace(/[$,"]/g,''))||0;
-  return table.rows.map((r,i)=>{
-    const cod=gv(r,ck),nom=gv(r,nk),pub=num(gv(r,pk)),pts=num(gv(r,ptk)),cat=gv(r,catk)||'General';
-    if(!nom||pub<=0)return null;
-    return{id:cod||String(i),n:nom,cat,sub:cat,cod:cod||String(i),pub,pts,desc:''};
-  }).filter(Boolean);
-}
-
-function prodsFromCSV(text){
-  const rows=parseCSV(text.trim());
-  const hdrs=rows[0].map(h=>h.replace(/["']/g,'').toLowerCase());
-  const fi=pats=>hdrs.findIndex(h=>pats.some(p=>h.includes(p)));
-  const pk=fi(['pub','suger','retail','venta']),ptk=fi(['punto','pts','point']);
-  const ck=fi(['codigo','code','cod']),nk=fi(['nombre','name','producto']),catk=fi(['categ','cat']);
-  const gv=(r,k)=>k>=0?(r[k]||'').replace(/["']/g,''):'';
-  const num=v=>parseFloat(String(v).replace(/[$,"]/g,''))||0;
-  return rows.slice(1).map((r,i)=>{
-    const cod=gv(r,ck),nom=gv(r,nk),pub=num(gv(r,pk)),pts=num(gv(r,ptk)),cat=gv(r,catk)||'General';
-    if(!nom||pub<=0)return null;
-    return{id:cod||String(i),n:nom,cat,sub:cat,cod:cod||String(i),pub,pts,desc:''};
-  }).filter(Boolean);
-}
-
 async function syncPrices(){
+  toast(T('syncing'));
   try{
-    let fresh=[];
-    // Intentar fetch directo (funciona en https://). Si falla por CORS (file://), usar gviz.
-    try{
-      const resp=await fetch(SYNC_CSV_URL);
-      if(!resp.ok)throw new Error('http '+resp.status);
-      fresh=prodsFromCSV(await resp.text());
-    }catch{
-      const table=await loadGviz('1EiMWr8BYAscQjfzg-sQ4l9448hbLel7S0Roxf28-lYY','1781130644');
-      fresh=prodsFromGvizTable(table);
-    }
-    if(fresh.length){
-      localStorage.setItem(SYNC_LS_KEY,JSON.stringify(fresh));
-      localStorage.setItem(SYNC_TS_KEY,Date.now());
-      PRODS.length=0;PRODS.push(...fresh);
-      initCats();renderProducts();
-    }
-  }catch(e){console.warn('sync error',e);}
-}
-
-function loadSyncedProds(){
-  try{
-    const s=localStorage.getItem(SYNC_LS_KEY);
-    return s?JSON.parse(s):null;
-  }catch{return null;}
-}
-
-const PRODS=[
-  {id:'120843',n:'Double X Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'120843',pub:117474,pts:29.24,desc:'Multivitamínico, multimineral y fitoquímico avanzado. 12 vitaminas, 10 minerales y concentrado de 22 plantas.'},
-  {id:'110178',n:'B Plus Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'110178',pub:24421,pts:6.08,desc:'Complejo de 8 vitaminas del grupo B para el metabolismo energético y la función del sistema nervioso.'},
-  {id:'109741',n:'C Plus Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'109741',pub:24931,pts:6.21,desc:'Vitamina C con bioflavonoides de acerola para un sistema inmunológico fuerte y protección antioxidante.'},
-  {id:'102736',n:'Fibra en Polvo Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'102736',pub:51997,pts:12.94,desc:'Fibra dietaria soluble e insoluble de origen vegetal para la digestión y el tránsito intestinal saludable.'},
-  {id:'100054',n:'CLA 500 Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'100054',pub:61079,pts:15.20,desc:'Ácido Linoleico Conjugado de aceite de cártamo natural con certificación orgánica.'},
-  {id:'110415',n:'Proteína Vegetal Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'110415',pub:60789,pts:15.13,desc:'Proteína de alta calidad de origen vegetal (soya, trigo y amaranto). Ideal para recuperación muscular.'},
-  {id:'110609',n:'Cal Mag D Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'110609',pub:26779,pts:6.67,desc:'Calcio, magnesio y vitamina D para huesos fuertes y función muscular óptima.'},
-  {id:'106678',n:'HSN Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'106678',pub:26683,pts:6.64,desc:'Biotina, zinc y selenio para el cuidado del cabello, la piel y las uñas.'},
-  {id:'109536',n:'Multicaroteno Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'109536',pub:40337,pts:10.04,desc:'Complejo de carotenoides naturales con beta-caroteno, licopeno y luteína.'},
-  {id:'126130',n:'Triple Omega-3 Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'126130',pub:64749,pts:16.12,desc:'Ácidos grasos omega 3, 6 y 9 de alta pureza. Apoya la salud cardiovascular y la función cerebral.'},
-  {id:'120571',n:'Probiotic Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'120571',pub:77185,pts:19.21,desc:'2 mil millones de microorganismos beneficiosos para el equilibrio de la flora intestinal.'},
-  {id:'123043',n:'Kids Daily Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'123043',pub:28967,pts:7.21,desc:'Vitaminas y minerales esenciales en formato masticable para el crecimiento sano de niños.'},
-  {id:'126009',n:'Daily Plus Nutrilite™ 45 Tab.',cat:'Nutrición',sub:'Nutrilite',cod:'126009',pub:28967,pts:7.21,desc:'22 vitaminas y minerales esenciales con exclusivo jugo de acerola. Una tableta al día.'},
-  {id:'126010',n:'Daily Plus Nutrilite™ 90 Tab.',cat:'Nutrición',sub:'Nutrilite',cod:'126010',pub:56400,pts:14.04,desc:'Presentación de 90 tabletas. 22 vitaminas y minerales para 3 meses de bienestar.'},
-  {id:'102046',n:'Tri Iron Folic Nutrilite™',cat:'Nutrición',sub:'Nutrilite',cod:'102046',pub:29492,pts:7.34,desc:'Hierro + ácido fólico + vitamina C para máxima absorción. Apoya la salud femenina.'},
-  {id:'315249',n:'Nutrilite™ Collagen + C',cat:'Nutrición',sub:'Nutrilite',cod:'315249',pub:75000,pts:18.67,desc:'Colágeno hidrolizado tipo I, II y III con vitamina C para piel, articulaciones y tejidos.'},
-  {id:'118891',n:'Phytopowder™ Naranja',cat:'Nutrición',sub:'Nutrilite',cod:'118891',pub:63089,pts:15.70,desc:'Bebida en polvo con fitoquímicos de frutas y vegetales. Sabor naranja refrescante.'},
-  {id:'118893',n:'Phytopowder™ Cereza',cat:'Nutrición',sub:'Nutrilite',cod:'118893',pub:63089,pts:15.70,desc:'Bebida en polvo con fitoquímicos de frutas y vegetales. Sabor cereza.'},
-  {id:'127004',n:'XS Cranberry Grape (12 u.)',cat:'Nutrición',sub:'XS',cod:'127004',pub:42356,pts:5.27,desc:'Pack 12 bebidas energizantes sin azúcar con vitaminas del grupo B. Sabor cranberry y uva.'},
-  {id:'126740',n:'Máscara + Sérum Pestañas',cat:'Belleza',sub:'Artistry',cod:'126740',pub:48280,pts:11.42,desc:'Dúo intensificador de pestañas resistente al agua. El sérum nutre y fortalece.'},
-  {id:'126744',n:'Delineador de Ojos Waterproof',cat:'Belleza',sub:'Artistry',cod:'126744',pub:40363,pts:9.54,desc:'Delineador de larga duración resistente al agua y al sudor.'},
-  {id:'126747',n:'Brow Pencil & Gel de Cejas',cat:'Belleza',sub:'Artistry',cod:'126747',pub:40363,pts:9.54,desc:'Define y da forma a las cejas con el lápiz y fijalas con el gel.'},
-  {id:'124144',n:'Lipstick Crema Saturday Peach',cat:'Belleza',sub:'Artistry',cod:'124144',pub:34026,pts:8.05,desc:'Labial cremoso de larga duración con acabado satinado e hidratación de aceite de argán.'},
-  {id:'124149',n:'Lipstick Crema Secret Crush Scarlet',cat:'Belleza',sub:'Artistry',cod:'124149',pub:34026,pts:8.05,desc:'Labial cremoso en rojo intenso con acabado satinado. Color que dura todo el día.'},
-  {id:'124155',n:'Lipstick Matte Lunch Date Pink',cat:'Belleza',sub:'Artistry',cod:'124155',pub:34026,pts:8.05,desc:'Labial mate con textura suave. Sin sensación de resequedad. Pigmentación intensa.'},
-  {id:'124823',n:'Multi-Defense UV 50 Protect',cat:'Belleza',sub:'Artistry',cod:'124823',pub:72497,pts:17.14,desc:'Protector solar facial SPF 50+ con hidratación y antioxidantes.'},
-  {id:'125517',n:'Sérum Vitamina C + HA3',cat:'Belleza',sub:'Artistry',cod:'125517',pub:67319,pts:15.92,desc:'Triple ácido hialurónico + vitamina C para piel radiante, hidratada y luminosa.'},
-  {id:'125575',n:'Mascarilla para Dormir',cat:'Belleza',sub:'Artistry',cod:'125575',pub:84351,pts:19.95,desc:'Tratamiento nocturno con poli-glucurónicos y péptidos. Hidrata y revitaliza la piel.'},
-  {id:'123798',n:'Crema Hidratante Skin Nutrition',cat:'Belleza',sub:'Artistry',cod:'123798',pub:90123,pts:21.31,desc:'Nutrición profunda con 9 ingredientes botánicos activos.'},
-  {id:'123785',n:'Crema Reactivación Renovadora',cat:'Belleza',sub:'Artistry',cod:'123785',pub:111356,pts:26.33,desc:'Crema anti-edad. Reduce líneas de expresión y mejora la firmeza.'},
-  {id:'123791',n:'Agua Micelar Desmaquillante',cat:'Belleza',sub:'Artistry',cod:'123791',pub:55056,pts:13.02,desc:'Limpieza suave 3 en 1. Elimina el maquillaje, limpia e hidrata sin resecar.'},
-  {id:'125902',n:'Crema para Manos G&H',cat:'Cuidado Personal',sub:'G&H',cod:'125902',pub:16766,pts:3.96,desc:'Crema nutritiva de rápida absorción con extractos de girasol y semilla de algodón.'},
-  {id:'125893',n:'Loción Corporal G&H',cat:'Cuidado Personal',sub:'G&H',cod:'125893',pub:36542,pts:8.64,desc:'Hidratación profunda con manteca de karité y vitamina E.'},
-  {id:'125894',n:'Jabón Líquido Manos G&H',cat:'Cuidado Personal',sub:'G&H',cod:'125894',pub:21742,pts:5.14,desc:'Limpieza suave con agentes hidratantes naturales. Fragancia suave y agradable.'},
-  {id:'125892',n:'Gel de Baño Exfoliante G&H',cat:'Cuidado Personal',sub:'G&H',cod:'125892',pub:31204,pts:7.38,desc:'Exfoliante corporal que elimina células muertas y suaviza la piel.'},
-  {id:'125913',n:'Barra de Jabón Nutritiva G&H',cat:'Cuidado Personal',sub:'G&H',cod:'125913',pub:18068,pts:4.27,desc:'Jabón en barra con extractos botánicos nutritivos. Limpia suavemente.'},
-  {id:'125896',n:'Desodorante Roll-On G&H',cat:'Cuidado Personal',sub:'G&H',cod:'125896',pub:9690,pts:2.29,desc:'Antitranspirante eficaz con protección de 24 horas. Suave para piel sensible.'},
-  {id:'305275',n:'Protector Solar G&H SPF 30',cat:'Cuidado Personal',sub:'G&H',cod:'305275',pub:48449,pts:12.06,desc:'Protector solar corporal SPF 30+ resistente al agua. Para toda la familia.'},
-  {id:'126308',n:'G&H Baby Gel de Baño y Shampoo',cat:'Cuidado Personal',sub:'G&H Baby',cod:'126308',pub:21705,pts:5.13,desc:'Fórmula suave 2 en 1 sin lágrimas. Dermatológicamente probado para bebés.'},
-  {id:'254101',n:'Crema para Manos Ertia',cat:'Cuidado Personal',sub:'Ertia',cod:'254101',pub:17490,pts:4.35,desc:'Crema hidratante con extractos naturales. Absorción rápida y no grasosa.'},
-  {id:'254102',n:'Crema para Pies Ertia',cat:'Cuidado Personal',sub:'Ertia',cod:'254102',pub:23723,pts:5.90,desc:'Tratamiento intensivo para pies cansados y resecos. Hidratación profunda.'},
-  {id:'124106',n:'Pasta Dental Glister 200g',cat:'Cuidado Personal',sub:'Glister',cod:'124106',pub:12057,pts:2.85,desc:'Multiacción con fluoruro. Blanquea, fortalece el esmalte y previene la caries.'},
-  {id:'124107',n:'Pasta Dental Glister 50g',cat:'Cuidado Personal',sub:'Glister',cod:'124107',pub:4737,pts:1.12,desc:'Pasta dental Glister Multiacción en presentación compacta de viaje.'},
-  {id:'124108',n:'Enjuague Bucal Glister',cat:'Cuidado Personal',sub:'Glister',cod:'124108',pub:23590,pts:5.58,desc:'Antibacterial que elimina el 99.9% de bacterias. Frescura prolongada sin alcohol.'},
-  {id:'124109',n:'Cepillo Dental Glister',cat:'Cuidado Personal',sub:'Glister',cod:'124109',pub:24197,pts:5.72,desc:'Cerdas de microfibra para limpieza profunda y suave. Mango ergonómico.'},
-  {id:'342021',n:'Pack 12× Pasta Dental 200g',cat:'Cuidado Personal',sub:'Glister',cod:'342021',pub:132627,pts:31.36,desc:'Pack económico de 12 tubos Glister Multiacción 200g. Ideal para stock familiar.'},
-  {id:'126449',n:'Shampoo Hidratación Satinique',cat:'Cuidado Personal',sub:'Satinique',cod:'126449',pub:22306,pts:5.27,desc:'Tecnología amino-gel que hidrata y suaviza el cabello desde la primera lavada.'},
-  {id:'126451',n:'Acondicionador Hidratación Satinique',cat:'Cuidado Personal',sub:'Satinique',cod:'126451',pub:22306,pts:5.27,desc:'Desenreda y suaviza con tecnología amino-gel. Brillo y manejabilidad desde el primer uso.'},
-  {id:'126452',n:'Shampoo Reparador Satinique',cat:'Cuidado Personal',sub:'Satinique',cod:'126452',pub:22306,pts:5.27,desc:'Tratamiento para cabello dañado. Restaura la fibra capilar y devuelve el brillo.'},
-  {id:'126457',n:'Shampoo Anticaída Satinique',cat:'Cuidado Personal',sub:'Satinique',cod:'126457',pub:22306,pts:5.27,desc:'Con cafeína y biotina para fortalecer el cabello y reducir la caída.'},
-  {id:'126465',n:'Tratamiento Reparador Satinique',cat:'Cuidado Personal',sub:'Satinique',cod:'126465',pub:37200,pts:8.80,desc:'Mascarilla intensiva para cabello dañado. Reconstruye y fortalece desde adentro.'},
-  {id:'110488',n:'Dish Drops Lavaplatos',cat:'Hogar',sub:'Amway Home',cod:'110488',pub:33317,pts:3.94,desc:'Lavavajillas biodegradable ultra concentrado. Eficaz en grasa y seguro para manos.'},
-  {id:'110403',n:'SA8 Aerosol Quitamanchas',cat:'Hogar',sub:'Amway Home',cod:'110403',pub:30703,pts:3.63,desc:'Eliminador de manchas en aerosol. Actúa en segundos sin dañar las fibras.'},
-  {id:'124485',n:'SA8 Blanqueador Telas 1 Kg',cat:'Hogar',sub:'Amway Home',cod:'124485',pub:35299,pts:4.17,desc:'Blanqueador sin cloro seguro para colores y blancos. Ecológico y efectivo.'},
-  {id:'109849',n:'SA8 Detergente en Polvo 3 Kg',cat:'Hogar',sub:'Amway Home',cod:'109849',pub:71956,pts:8.51,desc:'Ultra concentrado para hasta 90 lavados. Máxima limpieza en agua fría o caliente.'},
-  {id:'112532',n:'SA8 Detergente Líquido 1 L',cat:'Hogar',sub:'Amway Home',cod:'112532',pub:46651,pts:5.52,desc:'Biodegradable. Alta eficacia en ropa oscura y delicada.'},
-  {id:'110480',n:'SA8 Suavizante Concentrado 1 L',cat:'Hogar',sub:'Amway Home',cod:'110480',pub:31320,pts:3.70,desc:'Suavizante concentrado de larga fragancia. Reduce la electricidad estática.'},
-];
-
-// ═══════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════
-let cart=JSON.parse(localStorage.getItem('client_cart')||'[]');
-let activeCat='Todos';
-const getP=id=>PRODS.find(p=>p.id===id);
-
-// ═══════════════════════════════════════════
-// SETUP
-// ═══════════════════════════════════════════
-// Always init the catalog
-initCats();
-renderProducts();
-updateBadge();
-updateFooter();
-
-if(!CFG){
-  document.getElementById('setup-screen').style.display='flex';
-}else{
-  document.getElementById('shop-title').textContent='🌿 '+CFG.nombre;
-  document.title=CFG.nombre;
-}
-
-function showSetup(){
-  const ss=document.getElementById('setup-screen');
-  ss.style.display='flex';
-  // Show close button only if app is already configured (CFG exists)
-  document.getElementById('setup-close-btn').style.display=CFG?'block':'none';
-}
-function hideSetup(){
-  document.getElementById('setup-screen').style.display='none';
-}
-
-function generateUrl(){
-  const tel=document.getElementById('s-tel').value.trim().replace(/\D/g,'');
-  const nom=document.getElementById('s-nom').value.trim()||'Mi Tienda AmwDigital';
-  if(!tel){toast('Ingresá tu número de WhatsApp');return;}
-  const url=`${location.origin}${location.pathname}#tel=${tel}&nombre=${encodeURIComponent(nom)}`;
-  document.getElementById('url-text').textContent=url;
-  document.getElementById('url-box').style.display='block';
-  document.getElementById('url-text').dataset.url=url;
-}
-function copyUrl(){
-  const url=document.getElementById('url-text').dataset.url;
-  if(navigator.share){
-    navigator.share({title:'Mi Tienda AmwDigital',url}).catch(()=>{});
-  }else{
-    navigator.clipboard.writeText(url).then(()=>toast('Link copiado ✓')).catch(()=>{});
-  }
+    const sheetName = COUNTRIES[country]?.sheet;
+    if(!sheetName){toast(T('no_sync_url'));return;}
+    const table=await loadGviz(AMWAY_SHEET_ID, sheetName);
+    const cols=table.cols.map(c=>c.label.toLowerCase());
+    const fi=pats=>cols.findIndex(c=>pats.some(p=>c.includes(p)));
+    const nk=fi(['nombre','name','producto']);
+    const ck=fi(['codigo','code','cod']);
+    const catk=fi(['categ','cat']);
+    const ek=fi(['empresario','emp','dist','costo']);
+    const pk=fi(['pub','suger','retail','venta']);
+    const ptk=fi(['punto','pts','point']);
+    const gv=(r,k)=>k>=0?String(r.c[k]?.v??''):'';
+    const num=v=>parseFloat(String(v).replace(/[$,"]/g,''))||0;
+    const imp=table.rows.map((r,i)=>({
+      id:gv(r,ck)||String(i),n:gv(r,nk)||'Sin nombre',
+      cat:gv(r,catk)||'Importados',sub:'',
+      cod:gv(r,ck)||'',desc:'',
+      emp:num(gv(r,ek)),pub:num(gv(r,pk)),
+      pts:num(gv(r,ptk))
+    })).filter(p=>p.n&&p.emp>0);
+    if(!imp.length){toast(T('sync_error')+' 0');return;}
+    prods=imp;saveProds();
+    localStorage.setItem('lastSync_'+country,new Date().toLocaleString(COUNTRIES[country].locale));
+    toast(T('sync_ok'));
+    initCats();renderProducts();
+    if(document.getElementById('v-ajustes').classList.contains('on'))renderSettings();
+  }catch(e){console.error(e);toast('ERR:'+String(e).substring(0,60));}
 }
 
 // ═══════════════════════════════════════════
@@ -480,77 +839,102 @@ function goTo(view){
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
   document.getElementById('v-'+view).classList.add('on');
   document.getElementById('nb-'+view).classList.add('on');
-  if(view==='carrito'){renderCart();updateFooter();}
+  if(view==='calc')    renderCart();
+  if(view==='pedidos') renderOrders();
+  if(view==='ajustes') renderSettings();
 }
 
 // ═══════════════════════════════════════════
 // CATALOG
 // ═══════════════════════════════════════════
 function initCats(){
-  const cats=['Todos',...new Set(PRODS.map(p=>p.cat))];
-  document.getElementById('cat-pills').innerHTML=cats.map(c=>
-    `<button class="pill${c===activeCat?' on':''}" onclick="setCat('${c}')">${c}</button>`
-  ).join('');
+  const cats=['Todos',...new Set(prods.map(p=>p.cat))];
+  if(!cats.includes(activeCat)) activeCat='Todos';
+  document.getElementById('cat-pills').innerHTML=cats.map(c=>{
+    const label=c==='Todos'?T('all'):c;
+    return `<button class="pill${c===activeCat?' on':''}" onclick="setCat('${c}')">${label}</button>`;
+  }).join('');
 }
+
 function setCat(cat){
   activeCat=cat;
   document.querySelectorAll('#cat-pills .pill').forEach((b,i)=>{
-    const cats=['Todos',...new Set(PRODS.map(p=>p.cat))];
+    const cats=['Todos',...new Set(prods.map(p=>p.cat))];
     b.classList.toggle('on',cats[i]===cat);
   });
   renderProducts();
 }
+
 function renderProducts(){
   const q=document.getElementById('srch-input').value.toLowerCase();
-  const list=PRODS.filter(p=>{
+  const el=document.getElementById('prod-list');
+  if(!prods.length){
+    el.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:60px 24px;color:var(--ts)">
+      <div style="font-size:44px;margin-bottom:10px">${COUNTRIES[country].flag}</div>
+      <div style="font-size:15px;font-weight:600;margin-bottom:6px">${COUNTRIES[country].name}</div>
+      <div style="font-size:13px;white-space:pre-line">${T('no_prods')}</div>
+    </div>`;
+    return;
+  }
+  const list=prods.filter(p=>{
     const mc=activeCat==='Todos'||p.cat===activeCat;
-    const ms=!q||p.n.toLowerCase().includes(q)||p.cod.toLowerCase().includes(q);
+    const ms=!q||p.n.toLowerCase().includes(q)||p.cod.toLowerCase().includes(q)||(p.sub||'').toLowerCase().includes(q);
     return mc&&ms;
   });
-  const el=document.getElementById('prod-list');
   if(!list.length){el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:50px 16px;color:var(--ts);font-size:14px">Sin resultados</div>';return;}
-  el.innerHTML=list.map(p=>`
-    <div class="pc" onclick="showProduct('${p.id}')">
+  el.innerHTML=list.map(p=>{
+    const icon=catIcon(p.cat);
+    return `<div class="pc" onclick="showProduct('${p.id}')">
       <div class="pc-img-wrap">
         <img class="pc-img" src="${imgUrl(p.cod)}"
           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
           loading="lazy" alt="${p.n}">
-        <div class="pc-placeholder" style="display:none">${catIcon(p.cat)}</div>
+        <div class="pc-placeholder" style="display:none">${icon}</div>
       </div>
       <div class="pc-body">
         <div class="pc-name">${p.n}</div>
         <div class="pc-pub">${fmt(p.pub)}</div>
+        ${clientMode?'':'<div class="pc-emp">Emp: '+fmt(p.emp)+'</div>'}
         <div class="pc-foot">
-          <span style="font-size:11px;color:var(--ts)">Cód. ${p.cod}</span>
+          <span class="pc-pts">${p.pts} pts</span>
           <button class="pc-add" onclick="event.stopPropagation();addCart('${p.id}')">+</button>
         </div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 // ═══════════════════════════════════════════
 // PRODUCT DETAIL
 // ═══════════════════════════════════════════
 function showProduct(id){
-  const p=getP(id);if(!p)return;
+  const p=getP(id); if(!p) return;
   const icon=catIcon(p.cat);
   document.getElementById('pdbox').innerHTML=`
     <button class="pd-close" onclick="closePD()">✕</button>
     <div class="pd-img-wrap">
       <img class="pd-img" src="${imgUrl(p.cod)}"
-        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${p.n}">
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+        alt="${p.n}">
       <div class="pd-placeholder" style="display:none">${icon}</div>
     </div>
     <div class="pd-info">
       <div class="pd-sub">${p.sub||p.cat}</div>
       <div class="pd-name">${p.n}</div>
       ${p.desc?`<div class="pd-desc">${p.desc}</div>`:''}
-      <div class="pd-pts">Cód. ${p.cod}</div>
+      <div class="pd-pts">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        ${p.pts} puntos · Cód. ${p.cod}
+      </div>
       <div class="pd-prices">
         <div class="pd-row">
-          <span class="pd-plabel">Precio al público</span>
-          <span class="pd-pval">${fmt(p.pub)}</span>
+          <span class="pd-plabel">${T('pub_price')}</span>
+          <span class="pd-pval pub">${fmt(p.pub)}</span>
         </div>
+        ${clientMode?'':` <div class="pd-row">
+          <span class="pd-plabel">${T('emp_price')}</span>
+          <span class="pd-pval emp">${fmt(p.emp)}</span>
+        </div>`}
       </div>
       <div class="pd-btns">
         <button class="pd-btn-share" onclick="shareProduct('${id}')">
@@ -562,15 +946,17 @@ function showProduct(id){
     </div>`;
   document.getElementById('pdoverlay').classList.add('on');
 }
+
 function closePD(e){
   if(!e||e.target===document.getElementById('pdoverlay'))
     document.getElementById('pdoverlay').classList.remove('on');
 }
+
 function shareProduct(id){
-  const p=getP(id);if(!p)return;
-  const txt=`✨ *${p.n}*\n${p.sub?p.sub+' · ':''}Amway\n\n${p.desc||''}\n\n💰 Precio: *${fmt(p.pub)}*`;
-  if(navigator.share)navigator.share({title:p.n,text:txt}).catch(()=>{});
-  else navigator.clipboard.writeText(txt).then(()=>toast('Copiado ✓'));
+  const p=getP(id); if(!p) return;
+  const txt=`✨ *${p.n}*\n${p.sub ? p.sub+' · ' : ''}Amway Argentina\n\n${p.desc||''}\n\n💰 Precio: *${fmt(p.pub)}*\n\nPara consultas o pedidos, escribime 🌿`;
+  if(navigator.share) navigator.share({title:p.n, text:txt}).catch(()=>{});
+  else navigator.clipboard.writeText(txt).then(()=>toast('Copiado al portapapeles'));
 }
 
 // ═══════════════════════════════════════════
@@ -578,206 +964,686 @@ function shareProduct(id){
 // ═══════════════════════════════════════════
 function addCart(id){
   const ex=cart.find(i=>i.id===id);
-  if(ex)ex.qty++;else cart.push({id,qty:1});
-  localStorage.setItem('client_cart',JSON.stringify(cart));
-  updateBadge();
-  toast('Agregado ✓');
+  if(ex) ex.qty++;
+  else cart.push({id,qty:1});
+  saveCart(); updateBadge(); toast('Agregado ✓');
 }
+
 function updateBadge(){
   const total=cart.reduce((s,i)=>s+i.qty,0);
-  const b1=document.getElementById('cart-badge');
-  const b2=document.getElementById('cart-badge-nav');
-  [b1,b2].forEach(b=>{if(!b)return;b.textContent=total;b.style.display=total?'inline-block':'none';});
+  const b=document.getElementById('cart-badge');
+  b.textContent=total||''; b.style.display=total?'inline-block':'none';
 }
+
+function setPM(m){
+  pm=m; ['emp','pub','both'].forEach(x=>document.getElementById('t-'+x).classList.toggle('on',x===m));
+  renderCart();
+}
+
 function renderCart(){
   const el=document.getElementById('cart-list');
+  const tb=document.getElementById('tbar');
+  const ptoggle=document.querySelector('.ptoggle');
+  // In client mode: hide distributor price toggle, force pub
+  if(ptoggle)ptoggle.style.display=clientMode?'none':'flex';
+  const effPm=clientMode?'pub':pm;
   if(!cart.length){
     el.innerHTML=`<div class="empty">
-      <svg viewBox="0 0 24 24" width="52" height="52" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      <p>Agregá productos desde el Catálogo</p></div>`;
-    return;
+      <svg viewBox="0 0 24 24" width="52" height="52" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="11" y2="12"/><line x1="14" y1="12" x2="17" y2="12"/></svg>
+      <p>${T('empty_cart')}</p></div>`;
+    tb.style.display='none'; return;
   }
+  tb.style.display='block';
   el.innerHTML=cart.map(item=>{
-    const p=getP(item.id);if(!p)return '';
-    return`<div class="ci">
+    const p=getP(item.id); if(!p) return '';
+    let pr='';
+    if(effPm==='emp') pr=`Emp: ${fmt(p.emp)} × ${item.qty} = <strong>${fmt(p.emp*item.qty)}</strong>`;
+    else if(effPm==='pub') pr=`${T('pub_price')}: ${fmt(p.pub)} × ${item.qty} = <strong>${fmt(p.pub*item.qty)}</strong>`;
+    else pr=`Emp: <strong>${fmt(p.emp*item.qty)}</strong> · Pub: ${fmt(p.pub*item.qty)}`;
+    return `<div class="ci">
       <div class="cin">
         <div class="cin-name">${p.n}</div>
-        <div style="font-size:11px;color:var(--ts);margin-top:1px">Cód. ${p.cod}</div>
-        <div class="cin-price">${fmt(p.pub)} × ${item.qty} = <strong>${fmt(p.pub*item.qty)}</strong></div>
+        <div class="cin-price">${pr}</div>
       </div>
       <div class="qc">
         <button class="qb" onclick="chQty('${item.id}',-1)">−</button>
         <span class="qn">${item.qty}</span>
         <button class="qb" onclick="chQty('${item.id}',1)">+</button>
-        <button class="qd" onclick="remItem('${item.id}')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button class="qd" onclick="remCart('${item.id}')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>`;
+  }).join('');
+  const te=cart.reduce((s,i)=>{const p=getP(i.id);return s+(p?p.emp*i.qty:0);},0);
+  const tp=cart.reduce((s,i)=>{const p=getP(i.id);return s+(p?p.pub*i.qty:0);},0);
+  const pts=cart.reduce((s,i)=>{const p=getP(i.id);return s+(p?p.pts*i.qty:0);},0);
+  const tl=document.getElementById('tlabel'), ta=document.getElementById('tamount');
+  if(effPm==='emp'){tl.textContent=`${T('total_emp')} · ${pts.toFixed(1)} pts`;ta.textContent=fmt(te);}
+  else if(effPm==='pub'){tl.textContent=`${T('total_pub')} · ${pts.toFixed(1)} pts`;ta.textContent=fmt(tp);}
+  else{tl.textContent=`${pts.toFixed(1)} pts`;ta.textContent=`Emp ${fmt(te)}`;}
+}
+
+function chQty(id,d){
+  const it=cart.find(i=>i.id===id); if(!it) return;
+  it.qty+=d;
+  if(it.qty<=0) remCart(id); else{saveCart();renderCart();updateBadge();}
+}
+function remCart(id){cart=cart.filter(i=>i.id!==id);saveCart();renderCart();updateBadge();}
+function clearCart(){cart=[];saveCart();renderCart();updateBadge();}
+
+function shareCart(){
+  const lines=cart.map(it=>{
+    const p=getP(it.id);if(!p)return '';
+    return `• ${it.qty}× ${p.n}\n  Emp: ${fmt(p.emp*it.qty)} | Pub: ${fmt(p.pub*it.qty)}`;
+  }).filter(Boolean);
+  const te=cart.reduce((s,i)=>{const p=getP(i.id);return s+(p?p.emp*i.qty:0);},0);
+  const tp=cart.reduce((s,i)=>{const p=getP(i.id);return s+(p?p.pub*i.qty:0);},0);
+  const pts=cart.reduce((s,i)=>{const p=getP(i.id);return s+(p?p.pts*i.qty:0);},0);
+  const txt=`*Lista Amway Argentina*\n\n${lines.join('\n')}\n\n─────────────────\nTotal empresario: *${fmt(te)}*\nTotal público: *${fmt(tp)}*\nPuntos: ${pts.toFixed(1)} pts`;
+  if(navigator.share) navigator.share({text:txt}).catch(()=>{});
+  else navigator.clipboard.writeText(txt).then(()=>toast('Copiado al portapapeles'));
+}
+
+// ═══════════════════════════════════════════
+// PRESUPUESTO PDF
+// ═══════════════════════════════════════════
+function askPresupuesto(){
+  if(!cart.length){toast('El carrito está vacío');return;}
+  document.getElementById('mbox').innerHTML=`
+    <div class="mtitle">Presupuesto para cliente</div>
+    <div class="mstep">Precios al público · PDF para compartir</div>
+    <label class="flabel">Nombre del cliente</label>
+    <input class="finput" id="pp-client" placeholder="ej. María García" autofocus>
+    <label class="flabel">Nota opcional</label>
+    <input class="finput" id="pp-note" placeholder="Válido hasta el ...">
+    <button class="btnp" onclick="printPresupuesto()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Generar PDF
+    </button>
+    <button class="btns" onclick="closeModal()">Cancelar</button>`;
+  openModal();
+}
+
+function printPresupuesto(){
+  const client=document.getElementById('pp-client').value.trim()||'Cliente';
+  const note=document.getElementById('pp-note').value.trim();
+  const fecha=new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'});
+  const items=cart.map(it=>{const p=getP(it.id);return p?{n:p.n,cod:p.cod,qty:it.qty,unit:p.pub,total:p.pub*it.qty,pts:p.pts*it.qty}:null;}).filter(Boolean);
+  const total=items.reduce((s,i)=>s+i.total,0);
+  const totalPts=items.reduce((s,i)=>s+i.pts,0);
+
+  const el=document.getElementById('presupuesto-print');
+  el.innerHTML=`
+    <div class="pp-header">
+      <div>
+        <div class="pp-logo">AmwDigital</div>
+        <div class="pp-title">PRESUPUESTO</div>
+      </div>
+      <div class="pp-meta">
+        <div>Fecha: ${fecha}</div>
+        ${note?`<div>${note}</div>`:'<div>Válido por 48 horas</div>'}
+      </div>
+    </div>
+    <div class="pp-body">
+      <div class="pp-client">
+        Para: <strong>${client}</strong>
+      </div>
+      <table class="pp-table">
+        <thead>
+          <tr>
+            <th style="width:50%">Producto</th>
+            <th style="width:10%;text-align:center">Cód.</th>
+            <th style="width:10%;text-align:center">Cant.</th>
+            <th style="width:15%;text-align:right">P. Unit.</th>
+            <th style="width:15%;text-align:right">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${items.map(i=>`
+            <tr>
+              <td>${i.n}</td>
+              <td style="text-align:center;color:#888;font-size:11px">${i.cod}</td>
+              <td style="text-align:center">${i.qty}</td>
+              <td style="text-align:right">${fmt(i.unit)}</td>
+              <td style="text-align:right;font-weight:600">${fmt(i.total)}</td>
+            </tr>`).join('')}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" style="text-align:right;padding-right:8px;font-size:12px;color:#666">${totalPts.toFixed(1)} puntos</td>
+            <td style="text-align:right">TOTAL</td>
+            <td style="text-align:right">${fmt(total)}</td>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="pp-footer">
+        Precios sugeridos al público en pesos argentinos (ARS) · IVA incluido.<br>
+        Los precios pueden variar sin previo aviso. Para más información, consultame.
+      </div>
+    </div>`;
+
+  closeModal();
+  setTimeout(()=>{
+    window.print();
+    window.onafterprint=()=>{ el.innerHTML=''; };
+  }, 150);
+}
+
+// ═══════════════════════════════════════════
+// ORDERS
+// ═══════════════════════════════════════════
+function calcTotals(o){
+  const ep=o.envio/Math.max(o.compradores.length,1);
+  return o.compradores.map((n,i)=>{
+    const prod=o.items.filter(it=>it.c===i).reduce((s,it)=>{const p=getP(it.id);return s+(p?p.emp*it.qty:0);},0);
+    return{n,prod,total:prod+ep};
+  });
+}
+
+function renderOrders(){
+  const el=document.getElementById('orders-list');
+  if(!ords.length){
+    el.innerHTML=`<div class="empty">
+      <svg viewBox="0 0 24 24" width="52" height="52" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <p>Tocá <strong>+</strong> para crear tu primer pedido grupal</p></div>`;
+    return;
+  }
+  el.innerHTML=ords.map(o=>{
+    const tots=calcTotals(o);
+    const grand=tots.reduce((s,b)=>s+b.total,0);
+    const ep=o.envio/Math.max(o.compradores.length,1);
+    return`<div class="oc">
+      <div class="och" onclick="toggleOrd('${o.id}')">
+        <div>
+          <div class="ocn">${o.nombre}</div>
+          <div class="ocm">${o.compradores.length} compradores · ${o.fecha}</div>
+        </div>
+        <div class="oct">${fmt(grand)}</div>
+      </div>
+      <div class="oblist" id="ob-${o.id}" style="display:none">
+        ${tots.map((b,i)=>`
+          <div class="obr">
+            <div>
+              <div class="obn">${b.n}</div>
+              <div class="obsub">Productos ${fmt(b.prod)} + Envío ${fmt(ep)}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="obt">${fmt(b.total)}</div>
+              <button style="background:var(--gl);border:none;border-radius:8px;padding:5px 10px;color:var(--g);cursor:pointer;font-size:12px;font-family:inherit;font-weight:500" onclick="shareBuyer('${o.id}',${i})">Enviar</button>
+            </div>
+          </div>`).join('')}
+        <div class="oa">
+          <button class="btn-sm" onclick="editOrd('${o.id}')">Editar</button>
+          <button class="btn-del" onclick="delOrd('${o.id}')">Eliminar</button>
+        </div>
       </div>
     </div>`;
   }).join('');
 }
-function updateFooter(){
-  const total=cart.reduce((s,i)=>{const p=getP(i.id);return s+(p?p.pub*i.qty:0);},0);
-  const footer=document.getElementById('cart-footer');
-  footer.classList.toggle('on',cart.length>0);
-  document.getElementById('cf-amount').textContent=fmt(total);
+
+function toggleOrd(id){const el=document.getElementById('ob-'+id);el.style.display=el.style.display==='none'?'block':'none';}
+
+function shareBuyer(oid,bi){
+  const o=ords.find(x=>x.id===oid);if(!o)return;
+  const ep=o.envio/Math.max(o.compradores.length,1);
+  const name=o.compradores[bi];
+  const items=o.items.filter(it=>it.c===bi);
+  const lines=items.map(it=>{const p=getP(it.id);return p?`• ${it.qty}× ${p.n}: ${fmt(p.emp*it.qty)}`:''}).filter(Boolean);
+  const sub=items.reduce((s,it)=>{const p=getP(it.id);return s+(p?p.emp*it.qty:0);},0);
+  const txt=`Hola ${name.split(' ')[0]}! 🌿 Tu pedido:\n\n${lines.join('\n')}\nEnvío: ${fmt(ep)}\n────────────\n*Total: ${fmt(sub+ep)}*\n\n¡Gracias!`;
+  if(navigator.share) navigator.share({text:txt}).catch(()=>{});
+  else navigator.clipboard.writeText(txt).then(()=>toast('Copiado'));
 }
-function chQty(id,d){
-  const it=cart.find(i=>i.id===id);if(!it)return;
-  it.qty+=d;
-  if(it.qty<=0)cart=cart.filter(i=>i.id!==id);
-  localStorage.setItem('client_cart',JSON.stringify(cart));
-  renderCart();updateBadge();updateFooter();
-}
-function remItem(id){cart=cart.filter(i=>i.id!==id);localStorage.setItem('client_cart',JSON.stringify(cart));renderCart();updateBadge();updateFooter();}
-function clearCart(){
-  if(!confirm('¿Vaciar el carrito?'))return;
-  cart=[];localStorage.setItem('client_cart','[]');
-  renderCart();updateBadge();updateFooter();
+
+function delOrd(id){if(!confirm('¿Eliminar este pedido?'))return;ords=ords.filter(o=>o.id!==id);saveOrds();renderOrders();}
+
+function editOrd(id){
+  const o=ords.find(x=>x.id===id);if(!o)return;
+  ords=ords.filter(x=>x.id!==id);
+  nos={step:1,nombre:o.nombre,compradores:[...o.compradores],envio:o.envio,items:[...o.items],editId:id};
+  openModal();renderStep1();
 }
 
 // ═══════════════════════════════════════════
-// SEND ORDER VIA WHATSAPP
+// NEW ORDER WIZARD
 // ═══════════════════════════════════════════
-function sendOrder(){
-  if(!CFG||!CFG.tel){toast('Error: tienda sin configurar');return;}
-  if(!cart.length){toast('El carrito está vacío');return;}
-  // Ask for client name first
+function newOrder(){nos={step:1,nombre:'',compradores:[],envio:0,items:[],editId:null};openModal();renderStep1();}
+
+function renderStep1(){
   document.getElementById('mbox').innerHTML=`
-    <div class="mtitle">¿Cómo te llamás?</div>
-    <div class="mstep">Para personalizar tu pedido</div>
-    <input class="finput" id="client-name" placeholder="Nombre y apellido" autofocus>
-    <button class="btnp" onclick="confirmOrder()">Enviar pedido 📱</button>
+    <div class="mtitle">Pedido grupal</div>
+    <div class="mstep">Paso 1 de 3 — Datos generales</div>
+    <label class="flabel">Nombre del pedido</label>
+    <input class="finput" id="m-nom" placeholder="Pedido junio 2026" value="${nos.nombre}">
+    <label class="flabel">Compradores (uno por línea)</label>
+    <textarea class="finput" id="m-comp" rows="4" placeholder="Ale Seijo&#10;Darío&#10;Fer Ghedín">${nos.compradores.join('\n')}</textarea>
+    <label class="flabel">Costo total de envío ($)</label>
+    <input class="finput" id="m-env" type="number" placeholder="38173" value="${nos.envio||''}">
+    <button class="btnp" onclick="step2()">Siguiente — Asignar productos →</button>
+    <button class="btns" onclick="closeModal()">Cancelar</button>`;
+}
+
+function step2(){
+  const nom=document.getElementById('m-nom').value.trim();
+  const comp=document.getElementById('m-comp').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const env=parseFloat(document.getElementById('m-env').value)||0;
+  if(!nom||!comp.length){toast('Completá nombre y compradores');return;}
+  nos.nombre=nom;nos.compradores=comp;nos.envio=env;
+  window._mcat='Todos';renderStep2();
+}
+
+function renderStep2(){
+  const cats=['Todos',...new Set(prods.map(p=>p.cat))];
+  document.getElementById('mbox').innerHTML=`
+    <div class="mtitle">Asignar productos</div>
+    <div class="mstep">Paso 2 de 3 — ¿Qué pidió cada uno?</div>
+    <input class="finput" id="m-srch" placeholder="Buscar..." oninput="renderAssignProds()" style="margin-bottom:8px">
+    <div class="mscroll" id="m-cats">
+      ${cats.map(c=>`<button class="mpill${c==='Todos'?' on':''}" onclick="mcat('${c}',this)">${c}</button>`).join('')}
+    </div>
+    <div id="m-prods" style="max-height:30vh;overflow-y:auto;margin:8px 0;border-top:.5px solid var(--border);padding-top:8px"></div>
+    <div style="font-size:13px;font-weight:600;margin-bottom:6px;padding-top:8px;border-top:.5px solid var(--border)">Asignados</div>
+    <div id="m-assigned" style="max-height:20vh;overflow-y:auto"></div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btns" style="margin:0;flex:1" onclick="renderStep1()">← Atrás</button>
+      <button class="btnp" style="flex:2;margin:0" onclick="step3()">Ver resumen →</button>
+    </div>`;
+  renderAssignProds();renderAssigned();
+}
+
+function mcat(cat,btn){window._mcat=cat;document.querySelectorAll('#m-cats .mpill').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderAssignProds();}
+
+function renderAssignProds(){
+  const q=(document.getElementById('m-srch')?.value||'').toLowerCase();
+  const cat=window._mcat||'Todos';
+  const list=prods.filter(p=>{return(cat==='Todos'||p.cat===cat)&&(!q||p.n.toLowerCase().includes(q)||p.cod.toLowerCase().includes(q));}).slice(0,20);
+  const el=document.getElementById('m-prods');if(!el)return;
+  el.innerHTML=list.map(p=>`
+    <div class="apr">
+      <div class="apinfo"><div class="apname">${p.n}</div><div class="apprice">${fmt(p.emp)}</div></div>
+      <div class="apbtns">${nos.compradores.map((c,i)=>`<button class="apb" onclick="assign('${p.id}',${i})">${c.split(' ')[0]}</button>`).join('')}</div>
+    </div>`).join('');
+}
+
+function assign(pid,ci){
+  const ex=nos.items.find(it=>it.id===pid&&it.c===ci);
+  if(ex) ex.qty++;
+  else nos.items.push({id:pid,c:ci,qty:1});
+  renderAssigned();toast('✓ '+nos.compradores[ci].split(' ')[0]);
+}
+
+function renderAssigned(){
+  const el=document.getElementById('m-assigned');if(!el)return;
+  if(!nos.items.length){el.innerHTML='<div style="font-size:13px;color:var(--ts);padding:6px 0">Sin productos asignados aún.</div>';return;}
+  el.innerHTML=nos.items.map((it,idx)=>{
+    const p=getP(it.id);const cn=nos.compradores[it.c]||'?';
+    return`<div class="asr">
+      <div class="asinfo"><strong>${cn.split(' ')[0]}</strong> · ${it.qty}× ${p?p.n:'?'}<br><span style="color:var(--g)">${p?fmt(p.emp*it.qty):''}</span></div>
+      <div class="asqc">
+        <button class="asqb" onclick="asQty(${idx},-1)">−</button>
+        <span class="asqn">${it.qty}</span>
+        <button class="asqb" onclick="asQty(${idx},1)">+</button>
+        <button class="asqd" onclick="asRem(${idx})"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function asQty(idx,d){nos.items[idx].qty+=d;if(nos.items[idx].qty<=0)nos.items.splice(idx,1);renderAssigned();}
+function asRem(idx){nos.items.splice(idx,1);renderAssigned();}
+
+function step3(){
+  const tots=calcTotals(nos);
+  const ep=nos.envio/Math.max(nos.compradores.length,1);
+  const grand=tots.reduce((s,b)=>s+b.total,0);
+  document.getElementById('mbox').innerHTML=`
+    <div class="mtitle">Resumen del pedido</div>
+    <div class="mstep">Paso 3 de 3 — Confirmá para guardar</div>
+    <div class="sum-card">
+      ${tots.map(b=>`
+        <div class="sum-row">
+          <div><div class="sum-name">${b.n}</div><div class="sum-sub">Productos ${fmt(b.prod)} + Envío ${fmt(ep)}</div></div>
+          <div class="sum-total">${fmt(b.total)}</div>
+        </div>`).join('')}
+    </div>
+    <div class="sum-grand"><span style="color:var(--ts)">Total general</span><span>${fmt(grand)}</span></div>
+    <button class="btnp" onclick="saveOrd()">Guardar pedido</button>
+    <button class="btns" onclick="renderStep2()">← Editar productos</button>`;
+}
+
+function saveOrd(){
+  const ord={id:nos.editId||uid(),nombre:nos.nombre,compradores:nos.compradores,envio:nos.envio,items:nos.items,fecha:new Date().toLocaleDateString('es-AR')};
+  ords.unshift(ord);saveOrds();closeModal();goTo('pedidos');toast('Pedido guardado ✓');
+}
+
+// ═══════════════════════════════════════════
+// MODAL HELPERS
+// ═══════════════════════════════════════════
+function openModal(){document.getElementById('moverlay').classList.add('on');}
+function closeModal(e){if(!e||e.target===document.getElementById('moverlay'))document.getElementById('moverlay').classList.remove('on');}
+
+// ═══════════════════════════════════════════
+// PROVINCE
+// ═══════════════════════════════════════════
+function showProvModal(){
+  document.getElementById('mbox').innerHTML=`
+    <div class="mtitle" style="margin-bottom:14px">Seleccionar provincia</div>
+    ${PROVINCIAS.map(p=>`
+      <button class="provb" onclick="setProv('${p.n}',${p.iibb})">
+        <span>${p.n}</span><span class="prov-iibb">${p.iibb}% IIBB</span>
+      </button>`).join('')}
     <button class="btns" onclick="closeModal()">Cancelar</button>`;
   openModal();
 }
-function confirmOrder(){
-  const nombre=(document.getElementById('client-name').value.trim())||'Un cliente';
-  const total=cart.reduce((s,i)=>{const p=getP(i.id);return s+(p?p.pub*i.qty:0);},0);
-  const lines=cart.map(it=>{
-    const p=getP(it.id);
-    return p?`• ${it.qty}× ${p.n} [Cód. ${p.cod}] — ${fmt(p.pub*it.qty)}`:null;
-  }).filter(Boolean);
-  const msg=
-`Hola! Soy *${nombre}* y quiero hacer este pedido 🌿
 
-${lines.join('\n')}
-
-─────────────────
-*TOTAL: ${fmt(total)}*
-
-¡Muchas gracias! 😊`;
-  const waUrl=`https://wa.me/${CFG.tel}?text=${encodeURIComponent(msg)}`;
-  closeModal();
-  // Clear cart after sending
-  setTimeout(()=>{
-    window.open(waUrl,'_blank');
-    cart=[];localStorage.setItem('client_cart','[]');
-    renderCart();updateBadge();updateFooter();
-    toast('¡Pedido enviado! ✓');
-  },200);
+function setProv(n,iibb){
+  prov={n,iibb};saveProv();
+  document.getElementById('prov-label').textContent=`${n} (${iibb}%)`;
+  closeModal();toast(n+' seleccionada');
 }
 
 // ═══════════════════════════════════════════
-// INSTALL
+// IMPORT
 // ═══════════════════════════════════════════
-let _installPrompt = null;
-window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); _installPrompt = e; });
-window.addEventListener('appinstalled', () => { _installPrompt = null; toast('¡App instalada! ✓'); });
+function importFile(e){
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{
+      const data=new Uint8Array(ev.target.result);
+      const wb=XLSX.read(data,{type:'array'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const rows=XLSX.utils.sheet_to_json(ws);
+      if(!rows.length){toast('Archivo vacío');return;}
+      const keys=Object.keys(rows[0]).map(k=>k.toLowerCase());
+      const fk=pats=>keys.find(k=>pats.some(p=>k.includes(p)));
+      const nk=fk(['nombre','name','producto']);
+      const ck=fk(['codigo','code','cod']);
+      const catk=fk(['categ','cat']);
+      const ek=fk(['empresario','emp','costo']);
+      const pk=fk(['pub','sugerido','venta']);
+      const ptk=fk(['punto','pts','point']);
+      if(!nk||!ek){toast('Columnas no reconocidas');return;}
+      const gv=(row,key)=>key?Object.entries(row).find(([k])=>k.toLowerCase()===key)?.[1]??null:null;
+      const parse=v=>parseFloat(String(v||0).replace(/[$,"]/g,''))||0;
+      const imp=rows.map((row,i)=>({
+        id:gv(row,ck)||String(i),n:String(gv(row,nk)||'Sin nombre'),
+        cat:String(gv(row,catk)||'Importados'),sub:'',
+        cod:String(gv(row,ck)||''),desc:'',
+        emp:parse(gv(row,ek)),pub:parse(gv(row,pk)),
+        pts:parseFloat(gv(row,ptk)||0)||0
+      })).filter(p=>p.n&&p.emp>0);
+      if(!imp.length){toast('Sin productos válidos');return;}
+      prods=imp;saveProds();
+      toast(`${imp.length} productos importados ✓`);
+      initCats();renderProducts();
+      if(document.getElementById('v-ajustes').classList.contains('on'))renderSettings();
+    }catch(err){toast('Error al leer el archivo');console.error(err);}
+  };
+  r.readAsArrayBuffer(file);
+  e.target.value='';
+}
 
-async function installClientApp(){
-  if(_installPrompt){
-    _installPrompt.prompt();
-    const {outcome} = await _installPrompt.userChoice;
-    if(outcome==='accepted') _installPrompt = null;
+function resetProds(){
+  if(!confirm(T('restore')+' ('+COUNTRIES[country].name+')?'))return;
+  prods=country==='AR'?DEFAULT_PRODS:[];
+  saveProds();toast('Precios restaurados ✓');
+  initCats();renderProducts();
+  renderSettings();
+}
+
+// ═══════════════════════════════════════════
+// SETTINGS RENDER
+// ═══════════════════════════════════════════
+function renderSettings(){
+  const cs=COUNTRIES[country];
+  const lastSync=localStorage.getItem('lastSync_'+country)||T('never');
+  const syncUrl=localStorage.getItem('syncUrl_'+country)||'';
+  const h=document.getElementById('h-ajustes');if(h)h.textContent=T('settings');
+  const sc=document.getElementById('settings-content');if(!sc)return;
+  sc.innerHTML=`
+    <div class="stitle">${T('country')} & ${T('language')}</div>
+    <div class="ssec">
+      <div class="srow" onclick="showCountryModal()">
+        <span class="slabel">${T('country')}</span>
+        <span class="sval">${cs.flag} ${cs.name}</span>
+      </div>
+      <div class="srow" onclick="showLangModal()">
+        <span class="slabel">${T('language')}</span>
+        <span class="sval">${lang==='es'?'Español':lang==='en'?'English':'Português'}</span>
+      </div>
+    </div>
+
+    <div class="stitle">${T('client_mode')}</div>
+    <div class="ssec">
+      <div class="srow" onclick="toggleClientMode();renderSettings()">
+        <span class="slabel">${T('client_mode')}</span>
+        <button class="sw${clientMode?' on':''}" onclick="event.stopPropagation();toggleClientMode();renderSettings()"></button>
+      </div>
+    </div>
+
+    <div class="stitle">${T('sync_url')}</div>
+    <div class="ssec">
+      <div class="srow" onclick="showSyncModal()">
+        <span class="slabel">${T('sync_url')}</span>
+        <span class="sval${syncUrl?' grn':''}">${syncUrl?'✓ OK':'—'}</span>
+      </div>
+      <div class="srow" onclick="syncPrices()">
+        <span class="slabel">${T('sync_now')}</span>
+        <span class="sval grn">↻</span>
+      </div>
+      <div class="srow" style="cursor:default">
+        <span class="slabel">${T('last_sync')}</span>
+        <span class="sval">${lastSync}</span>
+      </div>
+    </div>
+    <div class="note" style="padding:6px 16px 10px">
+      💡 ${T('sync_hint')}
+    </div>
+
+    <div class="stitle">${T('price_list')}</div>
+    <div class="ssec">
+      <div class="srow" onclick="document.getElementById('filein').click()">
+        <span class="slabel">${T('import_excel')}</span>
+        <span class="sval grn">${T('upload')}</span>
+      </div>
+      <div class="srow" onclick="resetProds()">
+        <span class="slabel">${T('restore')}</span>
+        <span class="sval red">${T('reset_btn')}</span>
+      </div>
+    </div>
+    <div class="note">${T('col_hint')}</div>
+
+    <div class="stitle">${T('taxes')}</div>
+    <div class="ssec">
+      <div class="srow" style="cursor:default">
+        <span class="slabel">IVA</span>
+        <span class="sval">${cs.iva}% ${T('iva_included')}</span>
+      </div>
+      <div class="srow" onclick="showProvModal()">
+        <span class="slabel">${T('province_iibb')}</span>
+        <span class="sval" id="prov-label">${prov?prov.n+' ('+prov.iibb+'%)':T('no_province')}</span>
+      </div>
+    </div>
+
+    <div class="stitle">🔗 App de Clientes</div>
+    <div class="ssec">
+      <div class="srow" onclick="showClientLinkModal()">
+        <span class="slabel">Generar link para clientes</span>
+        <span class="sval grn">→</span>
+      </div>
+    </div>
+    <div class="note">Generá el link personalizado para compartir tu tienda con clientes.</div>
+
+    <div class="stitle">📲 Instalar app</div>
+    <div class="ssec">
+      <div class="srow" onclick="installApp()">
+        <span class="slabel">Instalar en este dispositivo</span>
+        <span class="sval grn" style="font-size:20px">⬇</span>
+      </div>
+    </div>
+
+    <div class="stitle">${T('about')}</div>
+    <div class="ssec">
+      <div class="srow" style="cursor:default"><span class="slabel">${T('version')}</span><span class="sval">3.0.0</span></div>
+      <div class="srow" style="cursor:default"><span class="slabel">${T('price_list')}</span><span class="sval">${cs.flag} ${cs.name} · 2026</span></div>
+      <div class="srow" style="cursor:default"><span class="slabel">${T('products')}</span><span class="sval" id="prod-count">${prods.length}</span></div>
+    </div>
+    <div class="note">${T('local_data')}</div>
+    <input type="file" id="filein" accept=".xlsx,.xls,.csv" onchange="importFile(event)">
+    <div style="height:32px"></div>
+  `;
+}
+
+// ═══════════════════════════════════════════
+// CLIENT LINK GENERATOR
+// ═══════════════════════════════════════════
+const CLIENT_APP_URL = 'https://amwtiendadigital.github.io/cliente';
+
+function showClientLinkModal(){
+  const savedTel = localStorage.getItem('clientWaTel') || '';
+  const savedNom = localStorage.getItem('clientNombre') || '';
+  const existingLink = savedTel
+    ? CLIENT_APP_URL + '/#tel=' + savedTel + '&nombre=' + encodeURIComponent(savedNom||'Mi Tienda AmwDigital') + '&pais=' + country
+    : '';
+  document.getElementById('mbox').innerHTML=`
+    <div class="mtitle">🔗 Link para clientes</div>
+    <div class="mstep">Completá los datos y copiá el link para compartir tu tienda.</div>
+
+    <label class="flabel">Tu número de WhatsApp (con código de país)</label>
+    <input class="finput" id="cl-tel" placeholder="ej. 5491112345678" value="${savedTel}" type="tel">
+
+    <label class="flabel">Nombre de tu tienda</label>
+    <input class="finput" id="cl-nom" placeholder="ej. AmwDigital con María" value="${savedNom}">
+
+    <button class="btnp" onclick="generateClientLink()">Generar link</button>
+
+    <div id="cl-result" style="display:${existingLink?'block':'none'};margin-top:14px">
+      <div style="background:var(--bg);border-radius:var(--rs);padding:12px;font-size:12px;word-break:break-all;color:var(--ts);font-family:monospace;line-height:1.6" id="cl-link-text">${existingLink}</div>
+      <button class="btnp" style="margin-top:10px" onclick="copyClientLink()">📋 Copiar y compartir link</button>
+    </div>
+
+    <button class="btns" onclick="closeModal()">Cerrar</button>`;
+  openModal();
+}
+
+function generateClientLink(){
+  const tel = document.getElementById('cl-tel').value.trim().replace(/\D/g,'');
+  const nom = document.getElementById('cl-nom').value.trim() || 'Mi Tienda AmwDigital';
+  if(!tel){ alert('Ingresá tu número de WhatsApp'); return; }
+  localStorage.setItem('clientWaTel', tel);
+  localStorage.setItem('clientNombre', nom);
+  const link = CLIENT_APP_URL + '/#tel=' + tel + '&nombre=' + encodeURIComponent(nom) + '&pais=' + country;
+  document.getElementById('cl-link-text').textContent = link;
+  document.getElementById('cl-result').style.display = 'block';
+}
+
+function copyClientLink(){
+  const link = document.getElementById('cl-link-text').textContent;
+  if(navigator.share){
+    navigator.share({title:'Mi Tienda AmwDigital — App de Clientes', url:link}).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(link).then(()=>toast('Link copiado ✓')).catch(()=>{});
+  }
+}
+
+// ═══════════════════════════════════════════
+// PWA INSTALL
+// ═══════════════════════════════════════════
+let deferredInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  // Refresh settings if open so the install button appears
+  if(document.getElementById('v-ajustes').classList.contains('on')) renderSettings();
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  toast('¡App instalada! ✓');
+  if(document.getElementById('v-ajustes').classList.contains('on')) renderSettings();
+});
+
+async function installApp(){
+  if(deferredInstallPrompt){
+    // Chrome Android: trigger native install dialog
+    deferredInstallPrompt.prompt();
+    const { outcome } = await deferredInstallPrompt.userChoice;
+    if(outcome === 'accepted'){ deferredInstallPrompt = null; toast('¡App instalada! ✓'); }
+    renderSettings();
     return;
   }
-  // Fallback: instructions modal
-  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  // Fallback: show step-by-step instructions
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isAndroid = /android/i.test(navigator.userAgent);
+  let steps = '';
+  if(isIOS){
+    steps = `
+      <div style="display:flex;flex-direction:column;gap:12px;margin:16px 0">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;background:var(--g);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">1</div>
+          <div style="font-size:14px">Tocá el botón <strong>Compartir</strong> <span style="font-size:18px">⎋</span> en la barra inferior de Safari</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;background:var(--g);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;color:#fff">2</div>
+          <div style="font-size:14px">Deslizá hacia abajo y tocá <strong>"Agregar a pantalla de inicio"</strong></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;background:var(--g);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;color:#fff">3</div>
+          <div style="font-size:14px">Tocá <strong>"Agregar"</strong> arriba a la derecha</div>
+        </div>
+      </div>
+      <div style="background:var(--bg);border-radius:var(--rs);padding:10px 13px;font-size:12px;color:var(--ts)">⚠️ Debe abrirse en <strong>Safari</strong> — Chrome en iPhone no soporta instalación PWA</div>`;
+  } else if(isAndroid){
+    steps = `
+      <div style="display:flex;flex-direction:column;gap:12px;margin:16px 0">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;background:var(--g);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;color:#fff">1</div>
+          <div style="font-size:14px">Tocá el menú <strong>⋮</strong> (tres puntos) arriba a la derecha en Chrome</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;background:var(--g);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;color:#fff">2</div>
+          <div style="font-size:14px">Tocá <strong>"Agregar a pantalla de inicio"</strong> o <strong>"Instalar app"</strong></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;background:var(--g);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;color:#fff">3</div>
+          <div style="font-size:14px">Tocá <strong>"Instalar"</strong> en el diálogo que aparece</div>
+        </div>
+      </div>
+      <div style="background:var(--bg);border-radius:var(--rs);padding:10px 13px;font-size:12px;color:var(--ts)">💡 Si no ves la opción, asegurate de estar en <strong>Chrome</strong> y que la URL empiece con <strong>https://</strong></div>`;
+  } else {
+    steps = `
+      <div style="font-size:14px;color:var(--ts);line-height:1.6;margin:14px 0">
+        <strong>Chrome / Edge (PC):</strong><br>Buscá el ícono de instalación <span style="font-size:16px">⊕</span> en la barra de direcciones, o menú → "Instalar AmwDigital".<br><br>
+        <strong>Android:</strong> menú ⋮ → "Instalar app"<br>
+        <strong>iPhone:</strong> Safari → Compartir → "Agregar a pantalla de inicio"
+      </div>`;
+  }
   document.getElementById('mbox').innerHTML=`
-    <div class="mtitle">📲 Guardar la tienda en tu celular</div>
-    <div class="mstep">Así la tenés siempre a mano, sin buscar el link.</div>
-    ${isIOS ? `
-    <div style="display:flex;flex-direction:column;gap:14px;margin:16px 0">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:34px;height:34px;background:var(--g);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;flex-shrink:0">1</div>
-        <div style="font-size:14px">Tocá el botón <strong>Compartir ⎋</strong> en la barra de Safari</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:34px;height:34px;background:var(--g);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;flex-shrink:0">2</div>
-        <div style="font-size:14px">Tocá <strong>"Agregar a pantalla de inicio"</strong></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:34px;height:34px;background:var(--g);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;flex-shrink:0">3</div>
-        <div style="font-size:14px">Tocá <strong>"Agregar"</strong> — listo, queda en tu pantalla</div>
-      </div>
-    </div>
-    <div style="background:var(--bg);border-radius:10px;padding:10px 13px;font-size:12px;color:var(--ts)">⚠️ Abrí este link en <strong>Safari</strong>, no en Chrome</div>
-    ` : `
-    <div style="display:flex;flex-direction:column;gap:14px;margin:16px 0">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:34px;height:34px;background:var(--g);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;flex-shrink:0">1</div>
-        <div style="font-size:14px">Tocá el menú <strong>⋮</strong> arriba a la derecha en Chrome</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:34px;height:34px;background:var(--g);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;flex-shrink:0">2</div>
-        <div style="font-size:14px">Tocá <strong>"Agregar a pantalla de inicio"</strong></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:34px;height:34px;background:var(--g);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;flex-shrink:0">3</div>
-        <div style="font-size:14px">Tocá <strong>"Instalar"</strong> — queda en tu pantalla de inicio</div>
-      </div>
-    </div>
-    `}
+    <div class="mtitle">📲 Instalar app</div>
+    <div class="mstep">Seguí estos pasos para instalar AmwDigital en tu dispositivo:</div>
+    ${steps}
     <button class="btns" onclick="closeModal()">Cerrar</button>`;
   openModal();
 }
 
 // ═══════════════════════════════════════════
-// MODAL / TOAST
+// INIT
 // ═══════════════════════════════════════════
-function openModal(){document.getElementById('moverlay').classList.add('on');}
-function closeModal(e){if(!e||e.target===document.getElementById('moverlay'))document.getElementById('moverlay').classList.remove('on');}
-function toast(msg){
-  const el=document.getElementById('toast');
-  el.textContent=msg;el.classList.add('on');
-  clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),2500);
-}
+applyLang();      // sets lang, country label, nav text, re-renders catalog
+updateBadge();
+updateClientModeUI();
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
 
-// ═══════════════════════════════════════════
-// SERVICE WORKER — network-first (auto-actualiza precios)
-// ═══════════════════════════════════════════
-// ═══════════════════════════════════════════
-// INIT — cargar precios sincronizados y auto-sync si pasó más de 1 hora
-// ═══════════════════════════════════════════
-(function initSync(){
-  const cached = loadSyncedProds();
-  if(cached && cached.length){ PRODS.length=0; PRODS.push(...cached); }
-  initCats(); renderProducts();
-  const ts = parseInt(localStorage.getItem(SYNC_TS_KEY)||'0');
-  if(Date.now() - ts > 60*60*1000) syncPrices();
+// Auto-sync al abrir: si el país tiene sheet configurado y pasó más de 1 hora
+(function autoSync(){
+  if(!COUNTRIES[country]?.sheet) return;
+  const lastRaw = localStorage.getItem('lastSyncTs_' + country);
+  const elapsed = lastRaw ? Date.now() - parseInt(lastRaw) : Infinity;
+  if(elapsed > 60 * 60 * 1000) {
+    syncPrices().then(()=> localStorage.setItem('lastSyncTs_' + country, Date.now()));
+  }
 })();
-
-if('serviceWorker' in navigator){
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw-client.js').then(reg => {
-      // Check for updates every time the app opens
-      reg.update();
-      // If a new SW is waiting, activate it immediately
-      reg.addEventListener('updatefound', () => {
-        const newSW = reg.installing;
-        newSW.addEventListener('statechange', () => {
-          if(newSW.state === 'installed' && navigator.serviceWorker.controller){
-            // New version available — reload to pick up latest prices/catalog
-            newSW.postMessage({type:'SKIP_WAITING'});
-          }
-        });
-      });
-    }).catch(()=>{});
-    // Reload page when new SW takes control
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-      window.location.reload();
-    });
-  });
-}
 </script>
 </body>
 </html>
