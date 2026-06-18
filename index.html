@@ -290,23 +290,61 @@ function loadGviz(sheetId,gid){
   });
 }
 
+function parseCSV(txt){
+  const rows=[];let row=[],field='',inQ=false;
+  for(let i=0;i<txt.length;i++){
+    const c=txt[i],n=txt[i+1];
+    if(inQ){if(c==='"'&&n==='"'){field+='"';i++;}else if(c==='"'){inQ=false;}else field+=c;}
+    else if(c==='"'){inQ=true;}
+    else if(c===','){row.push(field.trim());field='';}
+    else if(c==='\n'||c==='\r'){if(c==='\r'&&n==='\n')i++;if(row.length||field){row.push(field.trim());rows.push(row);row=[];field='';}}
+    else field+=c;
+  }
+  if(field||row.length){row.push(field.trim());rows.push(row);}
+  return rows;
+}
+
+function prodsFromGvizTable(table){
+  const cols=table.cols.map(c=>c.label.toLowerCase());
+  const fi=pats=>cols.findIndex(c=>pats.some(p=>c.includes(p)));
+  const pk=fi(['pub','suger','retail','venta']),ptk=fi(['punto','pts','point']);
+  const ck=fi(['codigo','code','cod']),nk=fi(['nombre','name','producto']),catk=fi(['categ','cat']);
+  const gv=(r,k)=>k>=0?String(r.c[k]?.v??''):'';
+  const num=v=>parseFloat(String(v).replace(/[$,"]/g,''))||0;
+  return table.rows.map((r,i)=>{
+    const cod=gv(r,ck),nom=gv(r,nk),pub=num(gv(r,pk)),pts=num(gv(r,ptk)),cat=gv(r,catk)||'General';
+    if(!nom||pub<=0)return null;
+    return{id:cod||String(i),n:nom,cat,sub:cat,cod:cod||String(i),pub,pts,desc:''};
+  }).filter(Boolean);
+}
+
+function prodsFromCSV(text){
+  const rows=parseCSV(text.trim());
+  const hdrs=rows[0].map(h=>h.replace(/["']/g,'').toLowerCase());
+  const fi=pats=>hdrs.findIndex(h=>pats.some(p=>h.includes(p)));
+  const pk=fi(['pub','suger','retail','venta']),ptk=fi(['punto','pts','point']);
+  const ck=fi(['codigo','code','cod']),nk=fi(['nombre','name','producto']),catk=fi(['categ','cat']);
+  const gv=(r,k)=>k>=0?(r[k]||'').replace(/["']/g,''):'';
+  const num=v=>parseFloat(String(v).replace(/[$,"]/g,''))||0;
+  return rows.slice(1).map((r,i)=>{
+    const cod=gv(r,ck),nom=gv(r,nk),pub=num(gv(r,pk)),pts=num(gv(r,ptk)),cat=gv(r,catk)||'General';
+    if(!nom||pub<=0)return null;
+    return{id:cod||String(i),n:nom,cat,sub:cat,cod:cod||String(i),pub,pts,desc:''};
+  }).filter(Boolean);
+}
+
 async function syncPrices(){
   try{
-    const table=await loadGviz('1EiMWr8BYAscQjfzg-sQ4l9448hbLel7S0Roxf28-lYY','1781130644');
-    const cols=table.cols.map(c=>c.label.toLowerCase());
-    const fi=pats=>cols.findIndex(c=>pats.some(p=>c.includes(p)));
-    const pk=fi(['pub','suger','retail','venta']);
-    const ptk=fi(['punto','pts','point']);
-    const ck=fi(['codigo','code','cod']);
-    const nk=fi(['nombre','name','producto']);
-    const catk=fi(['categ','cat']);
-    const gv=(r,k)=>k>=0?String(r.c[k]?.v??''):'';
-    const num=v=>parseFloat(String(v).replace(/[$,"]/g,''))||0;
-    const fresh=table.rows.map((r,i)=>{
-      const cod=gv(r,ck),nom=gv(r,nk),pub=num(gv(r,pk)),pts=num(gv(r,ptk)),cat=gv(r,catk)||'General';
-      if(!nom||pub<=0)return null;
-      return{id:cod||String(i),n:nom,cat,sub:cat,cod:cod||String(i),pub,pts,desc:''};
-    }).filter(Boolean);
+    let fresh=[];
+    // Intentar fetch directo (funciona en https://). Si falla por CORS (file://), usar gviz.
+    try{
+      const resp=await fetch(SYNC_CSV_URL);
+      if(!resp.ok)throw new Error('http '+resp.status);
+      fresh=prodsFromCSV(await resp.text());
+    }catch{
+      const table=await loadGviz('1EiMWr8BYAscQjfzg-sQ4l9448hbLel7S0Roxf28-lYY','1781130644');
+      fresh=prodsFromGvizTable(table);
+    }
     if(fresh.length){
       localStorage.setItem(SYNC_LS_KEY,JSON.stringify(fresh));
       localStorage.setItem(SYNC_TS_KEY,Date.now());
