@@ -1,4 +1,4 @@
-const CACHE = 'amwdigital-client-v1';
+const CACHE = 'amwdigital-client-v2';
 
 const CDN_CACHE = 'amwdigital-cdn-v1';
 
