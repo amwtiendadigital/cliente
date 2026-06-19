@@ -284,9 +284,9 @@ const IMG_SERVERS={
   CL:{host:'www.amway.cl',px:'400'},UY:{host:'www.amway.com.uy',px:'440'},
 };
 const CO_API='blt61e661dff490fa0d';
-const CO_IMGS={'321227':'blt0df9134f13cce9e7/6808215ff6a4e4424df9fdfd','122339':'blt069dde798b7ca5c4/67ecf9e75a47dd5ab64dce76','103972':'bltbdc1e33bc03b7001/67db9c891c722269eb43b3c2'};
+const CO_IMGS={'321227':'blt0df9134f13cce9e7/6808215ff6a4e4424df9fdfd/321227_01.jpg','122339':'blt069dde798b7ca5c4/67ecf9e75a47dd5ab64dce76/122339_01.jpg','103972':'bltbdc1e33bc03b7001/67db9c891c722269eb43b3c2/103972_01.jpg','100566':'bltf922188865482f3f/67e4c50f043faa5545d0340c/100566_01.jpg','110170':'blt56e1ba76a1e9cfd6/69d520ce3630f62d6afdc4b6/110170_01.png','117085':'bltc63e93b3eb3450fa/67e4c53ca5408c41532e1f72/117085_01.jpg','118761':'blt04fb65988ab42907/67e4c549f96feb707705a5b0/118761_01.jpg','286148':'blt3c06890e15668302/67e4c57dda82529d3ee495f8/286148_01.jpg'};
 const imgUrl=cod=>{
-  if(PAIS==='CO'&&CO_IMGS[cod])return`https://www.amway.com.co/assets/amshop/v3/assets/${CO_API}/${CO_IMGS[cod]}/${cod}_01.jpg`;
+  if(PAIS==='CO'&&CO_IMGS[cod])return`https://www.amway.com.co/assets/amshop/v3/assets/${CO_API}/${CO_IMGS[cod]}`;
   const s=IMG_SERVERS[PAIS]||{host:'www.amway.com.ar',px:'380'};
   return`https://${s.host}/img_pict/${s.px}_Catalog/Products/large/${s.px}_${cod}.jpg`;
 };
@@ -329,8 +329,8 @@ function prodsFromGvizTable(table){
   const ck=fi(['codigo','code','cod']),nk=fi(['nombre','name','producto']),catk=fi(['categ','cat']);
   const gv=(r,k)=>k>=0?String(r.c[k]?.v??''):'';
   const num=v=>parseFloat(String(v).replace(/[$,"]/g,''))||0;
-  const COD_FIX={'l.o.c.':'0001','pursue':'3878','tapa vertedora':'5113','tapa medidora':'5113','black cohosh':'8085','omega 3 plus 90':'8914','omega 3 90':'8914','carb blocker':'106542','prefiltro':'2087','d+1 prende':'321227','dosificador de bombeo':'103972'};
-  const COD_FIX_CO={'mascarilla':'122339'};
+  const COD_FIX={'l.o.c.':'0001','pursue':'3878','tapa vertedora':'5113','tapa medidora':'5113','black cohosh':'8085','omega 3 plus 90':'8914','omega 3 90':'8914','carb blocker':'106542','prefiltro':'2087','d+1 prende':'321227','dosificador de bombeo':'103972','cartucho repuesto':'2086','desviador':'1662','grifo auxiliar':'2663','soporte pared':'2996','parches iluminadores':'124818','toallitas':'124811','gel control':'125327','iluminador para los ojos':'125964'};
+  const COD_FIX_CO={'mascarilla':'122339','herbals ajo':'100566','b complex dual':'110170','slimmetry':'117085','vitamin d':'118761','vitamina d':'118761','vainilla':'286148'};
   const NAME_FIX_CL={'nutrilite carb blocker':'Cerocarb'};
   const HIDDEN_GLOBAL=['xs individual','kit de inicio','kit inicio'];
   const HIDDEN_CO=['d+1 ilumina','suero reafirmante','toallitas desmaquillantes','gel control imperfecciones','iluminador para los ojos','hidratante + antioxidante'];
